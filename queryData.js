@@ -1,33 +1,41 @@
-const fs = require('fs').promises;
-const readline = require('readline');
+// const fs = require('fs').promises;
+// const readline = require('readline');
+import * as d3 from "https://cdn.jsdelivr.net/npm/d3@7/+esm";
 
 async function getAllData(filePath) {
     try {
-      const data = await fs.readFile(filePath, 'utf-8');
-  
+      //const data = await fs.readFile(filePath, 'utf-8');
+      d3.csv(filePath).then(callBack);
       // Split the CSV into rows
-      const rows = data.split('\n');
+      function callBack(data) {
+        console.log(data);
+        // const rows = data
+    
+        // // Assuming the first row contains headers
+        // const headers = data.columns
   
-      // Assuming the first row contains headers
-      const headers = rows[0].split(',');
+        // for (i = 0; i < headers.length; i++) {
+        //     headers[i] = headers[i].slice(1,-1);
+        // }
+    
+        // // Parse the remaining rows
+        // const result = rows.slice(1).map(row => {
+        //   const values = row.split(',');
+        //   for (i = 0; i < values.length; i++) {
+        //       values[i] = values[i].slice(1,-1);
+        //   }
+        //   return headers.reduce((obj, header, index) => {
+        //     obj[header] = values[index];
+        //     return obj;
+        //   }, {});
+        // });
 
-      for (i = 0; i < headers.length; i++) {
-          headers[i] = headers[i].slice(1,-1);
+
+        window.data = data
+        console.log("loaded")
+        //testCall(data);
       }
-  
-      // Parse the remaining rows
-      const result = rows.slice(1).map(row => {
-        const values = row.split(',');
-        for (i = 0; i < values.length; i++) {
-            values[i] = values[i].slice(1,-1);
-        }
-        return headers.reduce((obj, header, index) => {
-          obj[header] = values[index];
-          return obj;
-        }, {});
-      });
 
-      return result;
     } catch (error) {
       console.error('Error fetching or parsing CSV:', error);
     }
@@ -35,22 +43,25 @@ async function getAllData(filePath) {
 
 
 async function main() {
+    getAllData('./collection_table.csv');
+    
+}
+
+function testCall(alldata) {
     let startTime = performance.now();
-    alldata = await getAllData('Data/collection_table.csv');
+
+    // const rl = readline.createInterface({
+    //     input: process.stdin,
+    //     output: process.stdout
+    // });
+    console.log(alldata.length);
+    //rl.on('line', (input) => {
+    test(["lum", [[1], [2], [3,4], [5]]], {"surf" : [2,5,7], "catr" : [1]}, alldata);
+        //console.log(`Received: ${input}`);
+    //});
     let endTime = performance.now();;
     let elapsedTime = endTime - startTime;
     console.log(`Elapsed Time: ${elapsedTime} milliseconds for retrieving ${alldata.length} entries`);
-
-    const rl = readline.createInterface({
-        input: process.stdin,
-        output: process.stdout
-    });
-    console.log(alldata.length);
-    rl.on('line', (input) => {
-        test(["lum", [[1], [2], [3,4], [5]]], {"surf" : [2,5,7], "catr" : [1]}, alldata, input);
-        console.log(`Received: ${input}`);
-    });
-    
 }
 
 // Function(list, filters)
@@ -60,7 +71,7 @@ async function main() {
 
 
 
-async function queryData(tuple, filters, data, inte) {
+async function queryData(tuple, filters, data) {
     const [str, list] = tuple;
     ret = []
     for (i = 0; i < list.length; i++) {
@@ -98,7 +109,7 @@ async function queryData(tuple, filters, data, inte) {
 }
 
 
-async function test(tuple, filters, data, inte) {
+export function test(tuple, filters, data) {
     const [str, list] = tuple;
     const listSet = list.map(subList => new Set(subList.map(Number)));
     const filtersSet = Object.fromEntries(Object.entries(filters).map(([key, values]) => [key, new Set(values.map(Number))]));
@@ -127,5 +138,7 @@ async function test(tuple, filters, data, inte) {
     let endTime = performance.now();
     let elapsedTime = endTime - startTime;
     console.log(`Elapsed Time: ${elapsedTime} milliseconds for a single query`);
+
+    return ret
 }
 main();
