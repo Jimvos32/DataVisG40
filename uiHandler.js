@@ -1,13 +1,24 @@
 import QueryGraphData from './queryGraphData.js';
+import Graphclass from './graphClass.js';
+import PieChart from './pieChart.js';
+import { graph } from "./graph.js"
+import * as d3 from "https://cdn.jsdelivr.net/npm/d3@7/+esm";
 
 var queryDict = {}
 var queryGraphData = new QueryGraphData();
-
+var gr = null;
+var pie = null;
 
 async function init() {
     
-    await queryGraphData.getAllData('Data/14_15_table.csv');
+    await queryGraphData.getAllData('Data/scaled_14_15.csv');
+    console.log("finished loading data");
     setClickListeners();
+    gr = new Graphclass(queryGraphData, "plot");
+    pie = new PieChart(queryGraphData, "pie");
+    
+    // graph.updateGraph();
+    // createGraph(queryGraphData);
 }
 
 function setClickListeners() {
@@ -20,9 +31,9 @@ function setClickListeners() {
                 if (this.checked) {
                     if (dropdown.id in queryDict && queryDict[dropdown.id] instanceof Set) {
                         queryDict[dropdown.id].add(parseInt(this.value));
+                        
                     } else {
                         queryDict[dropdown.id] = new Set([parseInt(this.value)]);
-                        prepareQuery();
                     }
 
                     console.log(queryDict);
@@ -35,15 +46,19 @@ function setClickListeners() {
 
                     console.log(queryDict);
                 }
+                prepareQuery();
             });
         });
     });
 }
 
 function prepareQuery() {
-    console.log()
-    var a = queryGraphData.queryStats([lum, [new Set([1])]], queryDict);
-    console.log(a);
+    gr.updateGraph([queryDict]);
+    pie.updatePie([queryDict]);
+    var b = queryGraphData.queryList([{}]);
+    console.log(b);
 }
+
+
 
 init();

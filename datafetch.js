@@ -118,6 +118,22 @@ async function main() {
     const joinedTable2 = await joinTables3();
   
     const monsterTable = joinAll(joinedTable, joinedTable2);
+
+    const filteredTable = monsterTable.filter(row => row['"an"'] == "15" || row['"an"'] == "14");
+
+    const keysToKeep = ['"atm"', '"int"', '"col"', '"lum"', '"catr"', '"surf"', '"grav"', '"catv"', '"catu"', '"secu"'];
+
+    const newTable = filteredTable.map(row => {
+        return Object.keys(row).reduce((newRow, key) => {
+            if (keysToKeep.includes(key)) {
+                newRow[key] = row[key];
+            }
+            return newRow;
+        }, {});
+    });
+
+
+    console.log(newTable.length);
     let endTime = performance.now();;
     let elapsedTime = endTime - startTime;
     console.log(`Elapsed Time: ${elapsedTime} milliseconds for joining ${joinedTable.length} entries`);
@@ -125,27 +141,33 @@ async function main() {
     elapsedTime = endTime - startTime;
     console.log(`Elapsed Time: ${elapsedTime} milliseconds for joining ${monsterTable.length} entries`);
 
-    const csvData = objectToCsv(monsterTable);
-    const csvA = objectToCsv(joinedTable);
-    const csvB = objectToCsv(joinedTable2);
+    const csvData = objectToCsv(newTable);
+    // const csvA = objectToCsv(joinedTable);
+    // const csvB = objectToCsv(joinedTable2);
 
     // Write data to CSV file
-    fs.writeFile('collection_table.csv', csvData, (err) => {
+    fs.writeFile('scaled_14_15.csv', csvData, (err) => {
       if (err) throw err;
       console.log('The file has been saved!');
     });
 
-    // Write data to CSV file
-    fs.writeFile('user_vehicle_table.csv', csvA, (err) => {
-      if (err) throw err;
-      console.log('The file has been saved!');
-    });
+    // // Write data to CSV file
+    // fs.writeFile('collection_table.csv', csvData, (err) => {
+    //   if (err) throw err;
+    //   console.log('The file has been saved!');
+    // });
 
-    // Write data to CSV file
-    fs.writeFile('char_place_table.csv', csvB, (err) => {
-      if (err) throw err;
-      console.log('The file has been saved!');
-    });
+    // // Write data to CSV file
+    // fs.writeFile('user_vehicle_table.csv', csvA, (err) => {
+    //   if (err) throw err;
+    //   console.log('The file has been saved!');
+    // });
+
+    // // Write data to CSV file
+    // fs.writeFile('char_place_table.csv', csvB, (err) => {
+    //   if (err) throw err;
+    //   console.log('The file has been saved!');
+    // });
   }
   
   // Run the main function

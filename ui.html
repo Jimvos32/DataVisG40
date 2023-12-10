@@ -123,200 +123,225 @@
             margin-bottom: 8px;
         }
     </style>
+
+    <style>
+    .container {
+        display: flex;
+        justify-content: space-between;
+    }
+
+    .text-box {
+        width: 200px; /* adjust as needed */
+        background-color: #f8f8f8; /* adjust as needed */
+        padding: 10px; /* adjust as needed */
+        overflow: auto; /* add a scrollbar if the content is too long */
+    }
+
+    </style>
+
 </head>
 
 <body>
-    <h1>Select Conditions</h1>
 
-    <label id="queryResult">Query result:</label>
-
-    <form>
-        <label for="weatherCondition">Weather Condition:</label>
-
-        
-        <div class="dropdown">
-            <div onclick="toggleDropdown('atm')" class="dropdown-btn">Select weather condition</div>
-            <div id="atm" class="dropdown-content" onclick="event.stopPropagation()">
-                <label><input type="checkbox" value=1>Normal</label>
-                <label><input type="checkbox" value=2>Light rain</label>
-                <label><input type="checkbox" value=3>Heavy rain</label>
-                <label><input type="checkbox" value=4>Snow - hail</label>
-                <label><input type="checkbox" value=5>Fog - smoke</label>
-                <label><input type="checkbox" value=6>Strong wind - storm</label>
-                <label><input type="checkbox" value=7>Dazzling weather</label>
-                <label><input type="checkbox" value=8>Cloudy weather</label>
-                <label><input type="checkbox" value=9>Other</label>
-            </div>
-        </div>
-        <br><br>
-
-        <label for="intersectionType">Intersection Type:</label>
-
-        <div class="dropdown">
-            <div onclick="toggleDropdown('int')" class="dropdown-btn">Select weather condition</div>
-            <div id="int" class="dropdown-content" onclick="event.stopPropagation()">
-                <label><input type="checkbox" value=1>Out of intersection</label>
-                <label><input type="checkbox" value=2>Intersection in X</label>
-                <label><input type="checkbox" value=3>Intersection in T</label>
-                <label><input type="checkbox" value=4>Intersection in Y</label>
-                <label><input type="checkbox" value=5>Intersection with more than 4 branches </label>
-                <label><input type="checkbox" value=6>Giratory</label>
-                <label><input type="checkbox" value=7>Place</label>
-                <label><input type="checkbox" value=8>Level crossing</label>
-                <label><input type="checkbox" value=9>Other intersection</label>
-            </div>
-        </div>
-
-        <br><br>
-
-      
-
-        <label for="collisionType">Collision Type:</label>
-
-        <div class="dropdown">
-            <div onclick="toggleDropdown('col')" class="dropdown-btn">Select collision type</div>
-            <div id="col" class="dropdown-content" onclick="event.stopPropagation()">
-                <label><input type="checkbox" value=1>Two vehicles - Frontal</label>
-                <label><input type="checkbox" value=2>Two vehicles - from the rear</label>
-                <label><input type="checkbox" value="3">Two vehicles - by the side</label>
-                <label><input type="checkbox" value="4">Three vehicles and more - in chain</label>
-                <label><input type="checkbox" value="5">Three vehicles or more - multiple collisions</label>
-                <label><input type="checkbox" value="6">Other collision</label>
-                <label><input type="checkbox" value="7">Without collision</label>
-            </div>
-        </div>
-        
-
-        <br><br>
-
-        <label for="lightingCondition">Lighting Condition:</label>
-
-        <div class="dropdown">
-            <div onclick="toggleDropdown('lum')" class="dropdown-btn">Select lighting condition</div>
-            <div id="lum" class="dropdown-content" onclick="event.stopPropagation()">
-                <label><input type="checkbox" value="1">Full day</label>
-                <label><input type="checkbox" value="2">Twilight or dawn</label>
-                <label><input type="checkbox" value="3">Night without public lighting</label>
-                <label><input type="checkbox" value="4">Night with public lighting not lit</label>
-                <label><input type="checkbox" value="5">Night with public lighting on</label>
-
-            </div>
-        </div>
-
-       
-        <br><br>
-
-        
-        
-        <label for="Category OF Road">Category Of Road:</label>
-
-        <div class="dropdown">
-            <div onclick="toggleDropdown('catr')" class="dropdown-btn">Select category of road</div>
-            <div id="catr" class="dropdown-content" onclick="event.stopPropagation()">
-                <label><input type="checkbox" value="1">Highway</label>
-                <label><input type="checkbox" value="2">National road</label>
-                <label><input type="checkbox" value="3">Departmental road</label>
-                <label><input type="checkbox" value="4">Communal highway</label>
-                <label><input type="checkbox" value="5">Off public network</label>
-                <label><input type="checkbox" value="6">Parking lot open to public traffic</label>
-                <label><input type="checkbox" value="9">Other</label>
-
-            </div>
-        </div>
-
-        <br><br>
-
-        <label for="surfaceCondition">Surface Condition:</label>
-
-        <div class="dropdown">
-            <div onclick="toggleDropdown('surf')" class="dropdown-btn">Select surface condition</div>
-            <div id="surf" class="dropdown-content" onclick="event.stopPropagation()">
-                <label><input type="checkbox" value="1">Normal</label>
-                <label><input type="checkbox" value="2">Wet</label>
-                <label><input type="checkbox" value="3">Puddles</label>
-                <label><input type="checkbox" value="4">Flooded</label>
-                <label><input type="checkbox" value="5">Snow</label>
-                <label><input type="checkbox" value="6">Mud</label>
-                <label><input type="checkbox" value="7">Icy</label>
-                <label><input type="checkbox" value="8">Oil</label>
-                <label><input type="checkbox" value="9">Other</label>
-            </div>
-        </div>
-
-        <br><br>
-
-        <label for="severityAccident">Severity of the Accident:</label>
-        <div class="dropdown">
-            <div onclick="toggleDropdown('grav')" class="dropdown-btn">Select severity of incedent</div>
-            <div id="grav" class="dropdown-content" onclick="event.stopPropagation()">
-                <label><input type="checkbox" value="1">Unscathed</label>
-                <label><input type="checkbox" value="2">Killed</label>
-                <label><input type="checkbox" value="3">Hospitalized wounded</label>
-                <label><input type="checkbox" value="4">Light injury</label>
-
-            </div>
-        </div>
-        <br><br>
-
-
-
-        <label for="vehicleType">Vehicle Type:</label>
-
-        <div class="dropdown">
-            <div onclick="toggleDropdown('catv')" class="dropdown-btn">Select vehicle type</div>
-            <div id="catv" class="dropdown-content" onclick="event.stopPropagation()">
-                <label><input type="checkbox" value="1">Bicycle</label>
-                <label><input type="checkbox" value="2">Moped</label>
-                <label><input type="checkbox" value="3">Cart (Quadricycle with bodied motor)</label>
-                <label><input type="checkbox" value="4">Not used since 2006 (registered scooter)</label>
-                <label><input type="checkbox" value="5">Not used since 2006 (side-car)</label>
-                <label><input type="checkbox" value="6">Not used since 2006 (motorcycle)</label>
-                <label><input type="checkbox" value="7">VL only</label>
-                <label><input type="checkbox" value="8">Not used category (VL + caravan)</label>
-                <label><input type="checkbox" value="9">Not used category (VL + trailer)</label>
-                <label><input type="checkbox" value="10">VU only 1,5T = GVW = 3,5T with or without trailer (formerly VU only 1,5T <= GVW <= 3,5T)</label>
-                <label><input type="checkbox" value="11">Most used since 2006 (VU (10) + caravan)</label>
-                <label><input type="checkbox" value="12">Most used since 2006 (VU (10) + trailer)</label>
-                <label><input type="checkbox" value="13">PL only 3,5T</label>
-
-
-            </div>
-        </div>
-
-        <br><br>
-
-        <label for="categoryUser">Category User:</label>
-
-        <div class="dropdown">
-            <div onclick="toggleDropdown('catu')" class="dropdown-btn">Select user catagory</div>
-            <div id="catu" class="dropdown-content" onclick="event.stopPropagation()">
-                <label><input type="checkbox" value="1">Driver</label>
-                <label><input type="checkbox" value="2">Passenger</label>
-                <label><input type="checkbox" value="3">Pedestrian</label>
-                <label><input type="checkbox" value="4">Pedestrian in rollerblade or scooter</label>
-            </div>
-        </div>
-      
-        <br><br>
-
-        <label for="Security Measures">Security Measures:</label>
-
-        <div class="dropdown">
-            <div onclick="toggleDropdown('secu')" class="dropdown-btn">Select used security mesures</div>
-            <div id="secu" class="dropdown-content" onclick="event.stopPropagation()">
-                <label><input type="checkbox" value="11">Belt</label>
-                <label><input type="checkbox" value="21">Helmet</label>
-                <label><input type="checkbox" value="31">Children's device</label>
-                <label><input type="checkbox" value="41">Reflective equipment</label>
-                <label><input type="checkbox" value="9">Other</label>
-
-
-            </div>
-        </div>
+   
     
-       
-        <input type="submit" value="Submit">
-    </form>
+    <div id ="container">
+
+        <div id = "plot"></div>
+        <div id = "pie"></div>
+
+        <h1>Select Conditions</h1>
+
+    
+        <form>
+            <label for="weatherCondition">Weather Condition:</label>
+
+            
+            <div class="dropdown">
+                <div onclick="toggleDropdown('atm')" class="dropdown-btn">Select weather condition</div>
+                <div id="atm" class="dropdown-content" onclick="event.stopPropagation()">
+                    <label><input type="checkbox" value=1>Normal</label>
+                    <label><input type="checkbox" value=2>Light rain</label>
+                    <label><input type="checkbox" value=3>Heavy rain</label>
+                    <label><input type="checkbox" value=4>Snow - hail</label>
+                    <label><input type="checkbox" value=5>Fog - smoke</label>
+                    <label><input type="checkbox" value=6>Strong wind - storm</label>
+                    <label><input type="checkbox" value=7>Dazzling weather</label>
+                    <label><input type="checkbox" value=8>Cloudy weather</label>
+                    <label><input type="checkbox" value=9>Other</label>
+                </div>
+            </div>
+            <br><br>
+
+            <label for="intersectionType">Intersection Type:</label>
+
+            <div class="dropdown">
+                <div onclick="toggleDropdown('int')" class="dropdown-btn">Select weather condition</div>
+                <div id="int" class="dropdown-content" onclick="event.stopPropagation()">
+                    <label><input type="checkbox" value=1>Out of intersection</label>
+                    <label><input type="checkbox" value=2>Intersection in X</label>
+                    <label><input type="checkbox" value=3>Intersection in T</label>
+                    <label><input type="checkbox" value=4>Intersection in Y</label>
+                    <label><input type="checkbox" value=5>Intersection with more than 4 branches </label>
+                    <label><input type="checkbox" value=6>Giratory</label>
+                    <label><input type="checkbox" value=7>Place</label>
+                    <label><input type="checkbox" value=8>Level crossing</label>
+                    <label><input type="checkbox" value=9>Other intersection</label>
+                </div>
+            </div>
+
+            <br><br>
+
+        
+
+            <label for="collisionType">Collision Type:</label>
+
+            <div class="dropdown">
+                <div onclick="toggleDropdown('col')" class="dropdown-btn">Select collision type</div>
+                <div id="col" class="dropdown-content" onclick="event.stopPropagation()">
+                    <label><input type="checkbox" value=1>Two vehicles - Frontal</label>
+                    <label><input type="checkbox" value=2>Two vehicles - from the rear</label>
+                    <label><input type="checkbox" value="3">Two vehicles - by the side</label>
+                    <label><input type="checkbox" value="4">Three vehicles and more - in chain</label>
+                    <label><input type="checkbox" value="5">Three vehicles or more - multiple collisions</label>
+                    <label><input type="checkbox" value="6">Other collision</label>
+                    <label><input type="checkbox" value="7">Without collision</label>
+                </div>
+            </div>
+            
+
+            <br><br>
+
+            <label for="lightingCondition">Lighting Condition:</label>
+
+            <div class="dropdown">
+                <div onclick="toggleDropdown('lum')" class="dropdown-btn">Select lighting condition</div>
+                <div id="lum" class="dropdown-content" onclick="event.stopPropagation()">
+                    <label><input type="checkbox" value="1">Full day</label>
+                    <label><input type="checkbox" value="2">Twilight or dawn</label>
+                    <label><input type="checkbox" value="3">Night without public lighting</label>
+                    <label><input type="checkbox" value="4">Night with public lighting not lit</label>
+                    <label><input type="checkbox" value="5">Night with public lighting on</label>
+
+                </div>
+            </div>
+
+        
+            <br><br>
+
+            
+            
+            <label for="Category OF Road">Category Of Road:</label>
+
+            <div class="dropdown">
+                <div onclick="toggleDropdown('catr')" class="dropdown-btn">Select category of road</div>
+                <div id="catr" class="dropdown-content" onclick="event.stopPropagation()">
+                    <label><input type="checkbox" value="1">Highway</label>
+                    <label><input type="checkbox" value="2">National road</label>
+                    <label><input type="checkbox" value="3">Departmental road</label>
+                    <label><input type="checkbox" value="4">Communal highway</label>
+                    <label><input type="checkbox" value="5">Off public network</label>
+                    <label><input type="checkbox" value="6">Parking lot open to public traffic</label>
+                    <label><input type="checkbox" value="9">Other</label>
+
+                </div>
+            </div>
+
+            <br><br>
+
+            <label for="surfaceCondition">Surface Condition:</label>
+
+            <div class="dropdown">
+                <div onclick="toggleDropdown('surf')" class="dropdown-btn">Select surface condition</div>
+                <div id="surf" class="dropdown-content" onclick="event.stopPropagation()">
+                    <label><input type="checkbox" value="1">Normal</label>
+                    <label><input type="checkbox" value="2">Wet</label>
+                    <label><input type="checkbox" value="3">Puddles</label>
+                    <label><input type="checkbox" value="4">Flooded</label>
+                    <label><input type="checkbox" value="5">Snow</label>
+                    <label><input type="checkbox" value="6">Mud</label>
+                    <label><input type="checkbox" value="7">Icy</label>
+                    <label><input type="checkbox" value="8">Oil</label>
+                    <label><input type="checkbox" value="9">Other</label>
+                </div>
+            </div>
+
+            <br><br>
+
+            <label for="severityAccident">Severity of the Accident:</label>
+            <div class="dropdown">
+                <div onclick="toggleDropdown('grav')" class="dropdown-btn">Select severity of incedent</div>
+                <div id="grav" class="dropdown-content" onclick="event.stopPropagation()">
+                    <label><input type="checkbox" value="1">Unscathed</label>
+                    <label><input type="checkbox" value="2">Killed</label>
+                    <label><input type="checkbox" value="3">Hospitalized wounded</label>
+                    <label><input type="checkbox" value="4">Light injury</label>
+
+                </div>
+            </div>
+            <br><br>
+
+
+
+            <label for="vehicleType">Vehicle Type:</label>
+
+            <div class="dropdown">
+                <div onclick="toggleDropdown('catv')" class="dropdown-btn">Select vehicle type</div>
+                <div id="catv" class="dropdown-content" onclick="event.stopPropagation()">
+                    <label><input type="checkbox" value="1">Bicycle</label>
+                    <label><input type="checkbox" value="2">Moped</label>
+                    <label><input type="checkbox" value="3">Cart (Quadricycle with bodied motor)</label>
+                    <label><input type="checkbox" value="4">Not used since 2006 (registered scooter)</label>
+                    <label><input type="checkbox" value="5">Not used since 2006 (side-car)</label>
+                    <label><input type="checkbox" value="6">Not used since 2006 (motorcycle)</label>
+                    <label><input type="checkbox" value="7">VL only</label>
+                    <label><input type="checkbox" value="8">Not used category (VL + caravan)</label>
+                    <label><input type="checkbox" value="9">Not used category (VL + trailer)</label>
+                    <label><input type="checkbox" value="10">VU only 1,5T = GVW = 3,5T with or without trailer (formerly VU only 1,5T <= GVW <= 3,5T)</label>
+                    <label><input type="checkbox" value="11">Most used since 2006 (VU (10) + caravan)</label>
+                    <label><input type="checkbox" value="12">Most used since 2006 (VU (10) + trailer)</label>
+                    <label><input type="checkbox" value="13">PL only 3,5T</label>
+
+
+                </div>
+            </div>
+
+            <br><br>
+
+            <label for="categoryUser">Category User:</label>
+
+            <div class="dropdown">
+                <div onclick="toggleDropdown('catu')" class="dropdown-btn">Select user catagory</div>
+                <div id="catu" class="dropdown-content" onclick="event.stopPropagation()">
+                    <label><input type="checkbox" value="1">Driver</label>
+                    <label><input type="checkbox" value="2">Passenger</label>
+                    <label><input type="checkbox" value="3">Pedestrian</label>
+                    <label><input type="checkbox" value="4">Pedestrian in rollerblade or scooter</label>
+                </div>
+            </div>
+        
+            <br><br>
+
+            <label for="Security Measures">Security Measures:</label>
+
+            <div class="dropdown">
+                <div onclick="toggleDropdown('secu')" class="dropdown-btn">Select used security mesures</div>
+                <div id="secu" class="dropdown-content" onclick="event.stopPropagation()">
+                    <label><input type="checkbox" value="11">Belt</label>
+                    <label><input type="checkbox" value="21">Helmet</label>
+                    <label><input type="checkbox" value="31">Children's device</label>
+                    <label><input type="checkbox" value="41">Reflective equipment</label>
+                    <label><input type="checkbox" value="9">Other</label>
+
+
+                </div>
+            </div>
+        
+        
+            <input type="submit" value="Submit">
+        </form>
+
+    </div>
 
     
 

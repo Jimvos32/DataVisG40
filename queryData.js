@@ -43,7 +43,8 @@ async function getAllData(filePath) {
 
 
 async function main() {
-    getAllData('./collection_table.csv');
+    // getAllData('Data/14_15_table.csv');
+    // getAllData('./collection_table.csv');
     
 }
 
