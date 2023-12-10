@@ -29,7 +29,11 @@ async function getAllData(filePath) {
         //     return obj;
         //   }, {});
         // });
-        main2(data);
+
+
+        window.data = data
+        console.log("loaded")
+        //testCall(data);
       }
 
     } catch (error) {
@@ -43,7 +47,7 @@ async function main() {
     
 }
 
-function main2(alldata) {
+function testCall(alldata) {
     let startTime = performance.now();
 
     // const rl = readline.createInterface({
@@ -67,7 +71,7 @@ function main2(alldata) {
 
 
 
-async function queryData(tuple, filters, data, inte) {
+async function queryData(tuple, filters, data) {
     const [str, list] = tuple;
     ret = []
     for (i = 0; i < list.length; i++) {
@@ -105,7 +109,7 @@ async function queryData(tuple, filters, data, inte) {
 }
 
 
-async function test(tuple, filters, data) {
+export function test(tuple, filters, data) {
     const [str, list] = tuple;
     const listSet = list.map(subList => new Set(subList.map(Number)));
     const filtersSet = Object.fromEntries(Object.entries(filters).map(([key, values]) => [key, new Set(values.map(Number))]));
@@ -134,5 +138,7 @@ async function test(tuple, filters, data) {
     let endTime = performance.now();
     let elapsedTime = endTime - startTime;
     console.log(`Elapsed Time: ${elapsedTime} milliseconds for a single query`);
+
+    return ret
 }
 main();
