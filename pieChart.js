@@ -28,9 +28,7 @@ export default class PieChart {
 
     async setupPie() {
         const data = await this.getData([{}]);
-        console.log(data);
 
-      
 
         // Select the div and append an svg element to it
         this.svg = d3.select("#" + this.id)

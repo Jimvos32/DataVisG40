@@ -15,7 +15,7 @@ export default class QueryGraphData {
         }
     }
 
-    queryStats(tuple, filters) {
+    queryFilterStats(tuple, filters) {
         const [str, list] = tuple;
 
         let ret = Array(list.length).fill().map(() => [0, {1: 0, 2: 0, 3: 0, 4: 0}]);
@@ -47,11 +47,8 @@ export default class QueryGraphData {
 
     queryList(filters) {
         let ret = Array(filters.length).fill().map(() => [0, {1: 0, 2: 0, 3: 0, 4: 0}]);
-        for (let i = 0; i < filters.length; i++) {
-            for (let key in filters[i]) {
-                console.log(key, ": ", this.data[0][key]);
-            }
-        }
+        // console.log("length", ret.length);
+        // console.log("ret", ret);
         for (let entry of this.data) {
 
             for (let i = 0; i < filters.length; i++) {
@@ -69,6 +66,11 @@ export default class QueryGraphData {
                 }
             }
         }
+        console.log("ret", ret);
         return ret
     }
+
+
+
+
 }

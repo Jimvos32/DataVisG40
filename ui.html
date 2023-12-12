@@ -149,6 +149,7 @@
 
         <div id = "plot"></div>
         <div id = "pie"></div>
+        <div id = "filter"></div>
 
         <h1>Select Conditions</h1>
 
@@ -176,7 +177,7 @@
             <label for="intersectionType">Intersection Type:</label>
 
             <div class="dropdown">
-                <div onclick="toggleDropdown('int')" class="dropdown-btn">Select weather condition</div>
+                <div onclick="toggleDropdown('int')" class="dropdown-btn">Select intersection type</div>
                 <div id="int" class="dropdown-content" onclick="event.stopPropagation()">
                     <label><input type="checkbox" value=1>Out of intersection</label>
                     <label><input type="checkbox" value=2>Intersection in X</label>
@@ -343,32 +344,10 @@
 
     </div>
 
-    
 
-    <script>
-        var openDropdown = null;
-    
-        function toggleDropdown(dropdownId) {
-            var dropdown = document.getElementById(dropdownId);
-    
-            if (openDropdown && openDropdown !== dropdown) {
-                openDropdown.style.display = "none";
-            }
-    
-            dropdown.style.display = (dropdown.style.display === "block") ? "none" : "block";
-            openDropdown = dropdown;
-        }
-    
-        window.onclick = function(event) {
-            var dropdowns = document.getElementsByClassName("dropdown-content");
-            for (var i = 0; i < dropdowns.length; i++) {
-                var dropdown = dropdowns[i];
-                if (dropdown.style.display === "block" && !event.target.matches('.dropdown-btn')) {
-                    dropdown.style.display = "none";
-                    openDropdown = null;
-                }
-            }
-        }
+    <script type="module">
+        import { toggleDropdown } from './uiHandler.js';
+        window.toggleDropdown = toggleDropdown;
     </script>
 
     <script type="module" src="uiHandler.js"></script>

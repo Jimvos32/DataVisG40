@@ -29,18 +29,18 @@ export default class Graphclass {
 
         var xDomain = ["Unscathed", "Killed", "Hospitalized wounded", "Light injury"] //Need dictionary mapping
         var xScale = d3.scaleBand()
-        .domain(xDomain)
-        .range([ 0, this.width ])
-        .padding(0.2);
+            .domain(xDomain)
+            .range([ 0, this.width ])
+            .padding(0.2);
 
         
 
         this.svg.append("g")
-        .attr("transform", "translate(0," + this.height + ")")
-        .call(d3.axisBottom(xScale))
-        .selectAll("text")
-            .attr("transform", "translate(-10,0)rotate(-45)")
-            .style("text-anchor", "end");
+            .attr("transform", "translate(0," + this.height + ")")
+            .call(d3.axisBottom(xScale))
+            .selectAll("text")
+                .attr("transform", "translate(-10,0)rotate(-45)")
+                .style("text-anchor", "end");
 
         const [max, data] = await this.getData([{}]);
 
@@ -75,12 +75,6 @@ export default class Graphclass {
             .domain([0, max])
             .range([this.height, 0]);
 
-        // this.svg.append("g")
-        //     .call(d3.axisLeft(yScale).tickFormat(function(d) {
-        //         // Return the label for tick value d
-        //         return "Label " + d;
-        //     }));
-
         // Select all bars and bind new data
         console.log(data);
         var bars = this.svg.selectAll("rect")
@@ -107,9 +101,90 @@ export default class Graphclass {
             .call(d3.axisLeft(yScale));
     }
 
+    async updateFiltergraph(filter, queryDict) {
+        const data = await this.getFilterStats(filter, queryDict);
+
+    
+        this.svg.selectAll("rect").remove();
+    
+        var xScale = d3.scaleBand()
+            .range([0, 20 * data.length])
+            .domain(data.map(function(d) { return d.category; }))
+            .padding(0.2);
+    
+        var yScale = d3.scaleLinear()
+            .domain([0, d3.max(data, function(d) { return d.total; })])
+            .range([this.height, 0]);
+    
+        var z = d3.scaleOrdinal()
+            .range(["#66c2a5", "#41ae76"]);
+    
+        var stack = d3.stack()
+            .keys(["heavy", "light"])
+            .order(d3.stackOrderNone)
+            .offset(d3.stackOffsetNone);
+    
+        var series = stack(data);
+        console.log(series);
+    
+        // Bind the new data to the bars
+        var bars = this.svg.selectAll("g.bar-group")
+            .data(series);
+    
+        // Handle the exit selection
+        bars.exit().remove();
+    
+        // Handle the enter selection
+        bars.enter().append("g")
+            .attr("class", "bar-group")
+            .attr("fill", function(d) { return z(d.key); })
+            .selectAll("rect")
+            .data(function(d) { return d; })
+            .enter().append("rect")
+            .attr("x", function(d) { return xScale(d.data.category); })
+            .attr("y", function(d) { return yScale(d[1]); })
+            .attr("height", function(d) { return yScale(d[0]) - yScale(d[1]); })
+            .attr("width", xScale.bandwidth());
+
+        // Remove the old x-axis
+        this.svg.select(".x-axis").remove();
+    
+        // Update the y-axis
+        this.svg.select(".y-axis")
+            .transition()
+            .duration(1000)
+            .call(d3.axisLeft(yScale));
+
+        // // Update the y-axis
+        // this.svg.select(".x-axis")
+        //     .transition()
+        //     .duration(1000)
+        //     .call(d3.axisLeft(yScale));
+    
+        // Update or create the x-axis
+        var xAxisGroup = this.svg.select(".x-axis");
+
+        if (xAxisGroup.empty()) {
+            xAxisGroup = this.svg.append("g")
+                .attr("transform", "translate(0," + this.height + ")")
+                .attr("class", "x-axis");
+        }
+
+        // Update the x-axis
+        xAxisGroup.transition()
+            .duration(1000)
+            .call(d3.axisBottom(xScale))
+            .selectAll("text")
+            .attr("transform", "translate(-10,0)rotate(-45)")
+            .style("text-anchor", "end");
+    }
+    
+    
+
     async getData(queryDict) {
         var data = [];
         var max = 0;
+        console.log(queryDict); 
         const [grav, what] = this.query.queryList(queryDict);
         for (let key in grav[1]) {
           
@@ -122,6 +197,46 @@ export default class Graphclass {
             data.push(value);
         }
         return [max, data];
+    }
+
+    async getFilterStats(filter, queryDict) {
+        const [str, list] = filter;
+
+        console.log(filter);
+        
+        var query = [];
+        for (let i = 0; i < list.length; i++) {
+            var x = { ...queryDict};
+            x[str] = new Set([list[i][1]]);
+
+            query.push(x);
+        }
+
+        var data =  [];
+
+
+
+        const res = this.query.queryList(query);
+        let max = 0;
+
+        for (let i = 0; i < res.length; i++) {
+            var add = {};
+            add["category"] = list[i][0];
+            add["heavy"] = res[i][1][2] + res[i][1][3];
+            add["light"] = res[i][1][1] + res[i][1][4];
+            add["total"] = res[i][0];
+            if (res[i][0] > max) {
+                max = res[i][0];
+            }
+            // add["heavy"] = res[i][1][2];
+            // add["light"] = res[i][1][1] + res[i][1][3] + res[i][1][4];
+            data.push(add);
+        }
+
+        console.log(data);
+
+        return data;
+
     }
 
 
