@@ -9,7 +9,6 @@ export default class QueryGraphData {
         try {
             console.log("loading data");
             this.data = await d3.csv(filePath);
-            console.log(this.data.length);
         } catch (err) {
             console.log(err);
         }
@@ -36,7 +35,6 @@ export default class QueryGraphData {
                 }
             }
         }
-        console.log(ret);
     
         let endTime = performance.now();
         let elapsedTime = endTime - startTime;
@@ -66,7 +64,6 @@ export default class QueryGraphData {
                 }
             }
         }
-        console.log("ret", ret);
         return ret
     }
 

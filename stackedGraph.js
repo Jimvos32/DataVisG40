@@ -35,8 +35,6 @@ export default class StackGraph {
             ,['Cloudy weather', 8]
             ,['Other', 9]], [{}]]);
 
-        console.log(data);
-
     
         var xScale = d3.scaleBand()
             .range([0, 20 * data.length])
@@ -62,7 +60,6 @@ export default class StackGraph {
             .call(d3.axisLeft(yScale));
   
         var series = stack(data);
-        console.log(series);
     
         // Bind the new data to the bars
         var bars = this.svg.selectAll("g.bar-group")
@@ -210,7 +207,6 @@ bars.enter().append("g")
     async getData(queryDict) {
         var data = [];
         var max = 0;
-        console.log(queryDict); 
         const [grav, what] = this.query.queryList(queryDict);
         for (let key in grav[1]) {
           
@@ -228,7 +224,6 @@ bars.enter().append("g")
     async getFilterStats(filter, queryDict) {
         const [str, list] = filter;
 
-        console.log(filter);
         
         var query = [];
         for (let i = 0; i < list.length; i++) {
@@ -243,7 +238,6 @@ bars.enter().append("g")
 
 
         const res = this.query.queryList(query);
-        let max = 0;
 
         for (let i = 0; i < res.length; i++) {
             var add = {};
@@ -251,15 +245,12 @@ bars.enter().append("g")
             add["heavy"] = res[i][1][2] + res[i][1][3];
             add["light"] = res[i][1][1] + res[i][1][4];
             add["total"] = res[i][0];
-            if (res[i][0] > max) {
-                max = res[i][0];
-            }
+            
             // add["heavy"] = res[i][1][2];
             // add["light"] = res[i][1][1] + res[i][1][3] + res[i][1][4];
             data.push(add);
         }
 
-        console.log(data);
 
         return data;
 

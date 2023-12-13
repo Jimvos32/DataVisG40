@@ -137,6 +137,23 @@
         overflow: auto; /* add a scrollbar if the content is too long */
     }
 
+   
+    select {
+        width: 200px; /* Adjust as needed */
+    }
+
+    .flex-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: start;
+    }
+
+    #heatmap {
+        flex-grow: 1;
+    }
+
+
     </style>
 
 </head>
@@ -150,6 +167,45 @@
         <div id = "plot"></div>
         <div id = "pie"></div>
         <div id = "filter"></div>
+
+        <div id = "heatMapBox" class="flex-container">
+            <div id="dropdowns">
+                <label for="weatherCondition">Filter for x-axis:</label>
+                    <select id="weatherCondition" onchange="handleSelectChange(event, 1)">
+                        <option value="atm">Weather condition</option>
+                        <option value="int">Intersection type</option>
+                        <option value="col">Collision type</option>
+                        <option value="lum">Lighting condition</option>
+                        <option value="catr">Category of road</option>
+                        <option value="surf">Surface condition</option>
+                        <option value="catv">Vehicle type</option>
+                        <option value="catu">Category user</option>
+                        <option value="secu">Security measures</option>
+                    </select>
+
+                <label for="weatherCondition">Filter for y-axis:</label>
+                    <select id="weatherCondition" onchange="handleSelectChange(event, 2)">
+                        <option value="int">Intersection type</option>
+                        <option value="atm">Weather condition</option>
+                        <option value="col">Collision type</option>
+                        <option value="lum">Lighting condition</option>
+                        <option value="catr">Category of road</option>
+                        <option value="surf">Surface condition</option>
+                        <option value="catv">Vehicle type</option>
+                        <option value="catu">Category user</option>
+                        <option value="secu">Security measures</option>
+                    </select>
+
+                <label for="weatherCondition">Select mesure:</label>
+                    <select id="weatherCondition" onchange="handleSelectChange(event, 3)">
+                        <option value="1">Fatality ratio</option>
+                        <option value="2">Occurences</option>
+                    </select>
+
+            </div>
+
+            <div id = "heatmap"></div>
+        </div>
 
         <h1>Select Conditions</h1>
 
@@ -332,6 +388,7 @@
                     <label><input type="checkbox" value="21">Helmet</label>
                     <label><input type="checkbox" value="31">Children's device</label>
                     <label><input type="checkbox" value="41">Reflective equipment</label>
+                    <label><input type="checkbox" value="12">No seatbelt in car</label>
                     <label><input type="checkbox" value="9">Other</label>
 
 
