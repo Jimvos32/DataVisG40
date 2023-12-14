@@ -1,5 +1,6 @@
 import * as d3 from "https://cdn.jsdelivr.net/npm/d3@7/+esm";
 
+
 export default class QueryGraphData {
     constructor() {
         this.data =null;
@@ -42,32 +43,33 @@ export default class QueryGraphData {
     
         return ret
     }
+ 
 
     queryList(filters) {
         let ret = Array(filters.length).fill().map(() => [0, {1: 0, 2: 0, 3: 0, 4: 0}]);
-        // console.log("length", ret.length);
-        // console.log("ret", ret);
+    
         for (let entry of this.data) {
-
+            let entryKeys = {};
+            for (let key in entry) {
+                entryKeys[key] = parseInt(entry[key]);
+            }
+    
             for (let i = 0; i < filters.length; i++) {
                 let valid = true;
                 for (let key in filters[i]) {
-
-                    let entryKey = parseInt(entry[key]);
-                    if (!filters[i][key].has(entryKey)) {
+                    if (!filters[i][key].has(entryKeys[key])) {
                         valid = false;
+                        break;
                     }
                 }
                 if (valid) {
                     ret[i][0] += 1;
-                    ret[i][1][parseInt(entry["grav"])] += 1;
+                    ret[i][1][entryKeys["grav"]] += 1;
                 }
             }
         }
-        return ret
+        return ret;
     }
 
-
-
-
+    
 }

@@ -80,7 +80,8 @@ export default class HeatMap {
         .call(d3.axisBottom(xScale))
         .selectAll("text")
             .attr("transform", "rotate(-45)")
-            .style("text-anchor", "end");
+            .style("text-anchor", "end")
+            .attr("dx", "-1em");
 
         this.svg.append("g").call(d3.axisLeft(yScale));
 
@@ -120,14 +121,23 @@ export default class HeatMap {
             .attr("class", "y axis")
             .attr("transform", "translate(" + (width + 60) + ",0)") // Adjust this value
             .call(yAxisLegend);
+
+        document.getElementById('loading').style.display = 'none';
     }
 
     async updateHeater(queryDict, labelsX, labelsY, mode) {
         let startTime = performance.now();
     
- 
+        // Show the loading indicator
+        
+        document.getElementById('heatmap').style.display = 'none';
+        document.getElementById('loading').style.display = 'block';
+
+        // Wait for the changes to be visible
+        await new Promise(resolve => setTimeout(resolve, 0));
 
         const [data, min, max] = await this.getData(queryDict, mode, labelsX.length, labelsY.length);
+
       
         // Clear the existing heatmap
         this.svg.selectAll("*").remove();
@@ -200,6 +210,12 @@ export default class HeatMap {
             .attr("class", "y axis")
             .attr("transform", "translate(" + (width + 60) + ",0)") // Adjust this value
             .call(yAxisLegend);
+
+
+
+        // Hide the loading indicator
+        document.getElementById('loading').style.display = 'none';
+        document.getElementById('heatmap').style.display = 'block';
                 
         let endTime = performance.now();
         let elapsedTime = endTime - startTime;
