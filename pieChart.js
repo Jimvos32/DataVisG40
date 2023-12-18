@@ -6,10 +6,11 @@ export default class PieChart {
         this.query = query;
         this.id = id;
         this.svg = null;
+        this.g = null;
         this.width = 460;
         this.height = 270;
         this.lengend = null;
-        this.pie = d3.pie().value(function(d) { return d.value; });
+        this.pie = d3.pie().sort(null).value(function(d) { return d.value; });
 
         this.arc = d3.arc()
             .innerRadius(0)
@@ -41,13 +42,14 @@ export default class PieChart {
                 .attr("transform", "translate(" + (this.width / 2 + this.margin.left - 100) + "," + (this.height / 2 + this.margin.top) + ")");
 
         // Create a group element for each segment of the pie chart
-        var g = this.svg.selectAll("g")
+        this.g = this.svg.selectAll(".pie")
             .data(this.pie(data))
             .enter()
-            .append("g");
+            .append("g")
+            .attr("class", "pie"); 
 
         // Create a path element for each segment and set its d attribute
-        g.append("path")
+        this.g.append("path")
             .attr("d", this.arc)
             .style("fill", function(d, i) {
                 // Color the segments
@@ -175,26 +177,24 @@ export default class PieChart {
         const data = await this.getData(queryDict);
     
         // Create a new data join with the updated data
-        var pie = d3.pie().value(function(d) { return d.value; });
+        var pie = d3.pie().sort(null).value(function(d) { return d.value; });
         // Select only the pie chart g elements
         var g = this.svg.selectAll(".pie")
             .data(pie(data));
 
+        this.svg.selectAll("rect")
+            .data(data);
 
-
-        // Add a class to the pie chart g elements
-        var enter = g.enter()
-            .append("g")
-            .attr("class", "pie");
-        enter.append("path")
-            .attr("d", this.arc)
-            .style("fill", function(d, i) {
-                var colors = ["#66c2a5", "#41ae76", "#238b45", "#005824"];
-                return colors[i];
-            })
-            // .on("mouseover",  handleMouseOver)
-            // .on("mouseout", handleMouseOut)
-            // .on("mousemove", handleMouseMove);
+        // // Add a class to the pie chart g elements
+        // var enter = g.enter()
+        //     .append("g")
+        //     .attr("class", "pie");
+        // enter.append("path")
+        //     .attr("d", this.arc)
+        //     .style("fill", function(d, i) {
+        //         var colors = ["#66c2a5", "#41ae76", "#238b45", "#005824"];
+        //         return colors[i];
+        //     });
        
         // Handle the update selection
         g.select("path")
