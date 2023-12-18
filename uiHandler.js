@@ -17,8 +17,8 @@ var heatMapVals = {1: "atm", 2: "int", 3: '1'};
 
 async function init() {
     
-    // await queryGraphData.getAllData('Data/scaled_14_15.csv');
-    await queryGraphData.getAllData('Data/scaled_collection.csv');
+    await queryGraphData.getAllData('Data/scaled_14_15.csv');
+    // await queryGraphData.getAllData('Data/scaled_collection.csv');
     console.log("finished loading data");
     setClickListeners();
     gr = new Graphclass(queryGraphData, "plot");
