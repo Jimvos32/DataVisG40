@@ -83,23 +83,87 @@ export default class StackGraph {
            .style("text-anchor", "end");
 
         // Bind the new data to the bars
-    var bars = this.svg.selectAll("g.bar-group")
-    .data(series);
+        var bars = this.svg.selectAll("g.bar-group")
+        .data(series);
 
-// Handle the exit selection
-bars.exit().remove();
+        // Handle the exit selection
+        bars.exit().remove();
 
-// Handle the enter selection
-bars.enter().append("g")
-    .attr("class", "bar-group")
-    .attr("fill", function(d) { return z(d.key); })
-    .selectAll("rect")
-    .data(function(d) { return d; })
-    .enter().append("rect")
-    .attr("x", function(d) { return xScale(d.data.category); })
-    .attr("y", function(d) { return yScale(d[1]); })
-    .attr("height", function(d) { return yScale(d[0]) - yScale(d[1]); })
-    .attr("width", xScale.bandwidth());
+        // Handle the enter selection
+        bars.enter().append("g")
+            .attr("class", "bar-group")
+            .attr("fill", function(d) { return z(d.key); })
+            .selectAll("rect")
+            .data(function(d) { return d; })
+            .enter().append("rect")
+            .attr("x", function(d) { return xScale(d.data.category); })
+            .attr("y", function(d) { return yScale(d[1]); })
+            .attr("height", function(d) { return yScale(d[0]) - yScale(d[1]); })
+            .attr("width", xScale.bandwidth())
+            .on("mouseover",  handleMouseOver)
+            .on("mouseout", handleMouseOut)
+            .on("mousemove", handleMouseMove);
+
+
+        // // Tooltip container
+        // this.tooltip = d3.select("body")
+        // .append("div")
+        // .attr("class", "tooltip")
+
+        var tooltip = window.graph.tooltip
+        var svg = this.svg
+        // Tooltip functions
+        function handleMouseOver(d, j) {
+            // Adjust the opacity of all bars
+            svg.selectAll("rect")
+                .style("opacity", 0.5);
+
+            // Highlight the selected bar
+            d3.select(this)
+                .style("opacity", 1)
+                //.attr("fill", "orange"); // Change color on hover
+            console.log(j)
+            tooltip.transition()
+                .duration(500)
+                .style("opacity", 0.9)
+                .style("display", 'unset');
+            var sum = 0;
+            for (var key in j.data) {
+                if(key == 'category' || key == 'total') {
+                    continue;
+                } else {
+                    if (j[0] == sum) {
+                        window.tooltipString = key + ": " + j.data[key] + " (" + Math.round(((j.data[key]/j.data["total"]) + Number.EPSILON) * 10000) / 100 + "%)";
+                        break;
+                    } else {
+                        sum += j.data[key]
+                    }
+                }
+            }
+
+        }
+
+        function handleMouseOut(d, j) {
+            // Restore the opacity of all bars
+            svg.selectAll("rect")
+                .style("opacity", 1)
+                //.attr("fill", "#69b3a2"); // Restore original color on mouseout
+
+            // Hide tooltip
+            tooltip.transition()
+                .duration(1)
+                .style("opacity", 0)
+                .style("display", 'none')
+        }
+
+        function handleMouseMove(d) {
+            // Display tooltip
+            console.log(d)
+            var [xpt, ypt] = d3.pointer(d);
+            tooltip.html(`${window.tooltipString}`)
+                .style("left", (d.screenX + 10) + "px")
+                .style("top", (d.screenY - 128) + "px");
+        }
         
     }
 
@@ -145,6 +209,7 @@ bars.enter().append("g")
             .attr("transform", function (d) {
                 return "translate(" + xScale(d[0].data.category) + ",0)";
             });
+            
     
         // Merge the new groups with the update selection
         bars = newGroups.merge(bars);
@@ -174,7 +239,10 @@ bars.enter().append("g")
             .attr("width", xScale.bandwidth())
             .attr("fill", function (d, i, nodes) { 
                 return z(d3.select(nodes[i].parentNode).datum().key); 
-            });
+            })
+            .on("mouseover",  handleMouseOver)
+            .on("mouseout", handleMouseOut)
+            .on("mousemove", handleMouseMove);
     
         // Update or create the x-axis
         var xAxisGroup = this.svg.select(".x-axis");
@@ -198,6 +266,62 @@ bars.enter().append("g")
             .transition()
             .duration(1000)
             .call(d3.axisLeft(yScale));
+
+
+        var tooltip = window.graph.tooltip
+        var svg = this.svg
+        // Tooltip functions
+        function handleMouseOver(d, j) {
+            // Adjust the opacity of all bars
+            svg.selectAll("rect")
+                .style("opacity", 0.5);
+
+            // Highlight the selected bar
+            d3.select(this)
+                .style("opacity", 1)
+                //.attr("fill", "orange"); // Change color on hover
+            console.log(j)
+            tooltip.transition()
+                .duration(500)
+                .style("opacity", 0.9)
+                .style("display", 'unset');
+            var sum = 0;
+            for (var key in j.data) {
+                if(key == 'category' || key == 'total') {
+                    continue;
+                } else {
+                    if (j[0] == sum) {
+                        window.tooltipString = key + ": " + j.data[key] + " (" + Math.round(((j.data[key]/j.data["total"]) + Number.EPSILON) * 10000) / 100 + "%)";
+                        break;
+                    } else {
+                        sum += j.data[key]
+                    }
+                }
+            }
+
+        }
+
+        function handleMouseOut(d, j) {
+            // Restore the opacity of all bars
+            svg.selectAll("rect")
+                .style("opacity", 1)
+                //.attr("fill", "#69b3a2"); // Restore original color on mouseout
+
+            // Hide tooltip
+            tooltip.transition()
+                .duration(1)
+                .style("opacity", 0)
+                .style("display", 'none')
+        }
+
+        function handleMouseMove(d) {
+            // Display tooltip
+            console.log(d)
+            var [xpt, ypt] = d3.pointer(d);
+            tooltip.html(`${window.tooltipString}`)
+                .style("left", (d.screenX + 10) + "px")
+                .style("top", (d.screenY - 128) + "px");
+        }
     }
     
     

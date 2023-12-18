@@ -60,6 +60,10 @@
             display: inline-block;
         }
 
+        .dropdown-btn:hover {
+            background-color: rgb(130, 204, 130);
+        }
+
         .dropdown-btn {
             padding: 8px;
             font-size: 16px;
@@ -86,7 +90,7 @@
             background-color: #f9f9f9;
             box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
             padding: 10px;
-            max-height: 150px;
+            max-height: 300px;
             overflow-y: auto;
             border: 1px solid #ddd;
             z-index: 1;
@@ -96,31 +100,12 @@
 
         .dropdown-content label {
             display: block;
-            margin-bottom: 8px;
-        }
-    </style>
-
-    <style>
-        .dropdown {
-            position: relative;
-            display: inline-block;
+            margin-bottom: 1px;
         }
 
-        .dropdown-content {
-            display: none;
-            position: absolute;
-            background-color: #f9f9f9;
-            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
-            padding: 10px;
-            max-height: 150px;
-            overflow-y: auto;
-            border: 1px solid #ddd;
-            z-index: 1;
-        }
-
-        .dropdown-content label {
-            display: block;
-            margin-bottom: 8px;
+        .dropdown-content label:hover {
+            color: white;
+            background-color:#1967D2;
         }
     </style>
 
@@ -181,6 +166,15 @@
         width: 20px;
         height: 20px;
         animation: spin 2s linear infinite;
+    }
+
+    .tooltip {
+    position: fixed;
+    background-color: white;
+    border: 1px solid #ccc;
+    padding: 10px;
+    opacity: 0;
+    pointer-events: none;
     }
 
     @keyframes spin {
@@ -260,7 +254,7 @@
 
             
             <div class="dropdown">
-                <div onclick="toggleDropdown('atm')" class="dropdown-btn">Select weather condition</div>
+                <div onclick="toggleDropdown('atm')" class="dropdown-btn" data-dropdown="atm">Select weather condition</div>
                 <div id="atm" class="dropdown-content" onclick="event.stopPropagation()">
                     <label><input type="checkbox" value=1>Normal</label>
                     <label><input type="checkbox" value=2>Light rain</label>
@@ -278,7 +272,7 @@
             <label for="intersectionType">Intersection Type:</label>
 
             <div class="dropdown">
-                <div onclick="toggleDropdown('int')" class="dropdown-btn">Select intersection type</div>
+                <div onclick="toggleDropdown('int')" class="dropdown-btn" data-dropdown="int">Select intersection type</div>
                 <div id="int" class="dropdown-content" onclick="event.stopPropagation()">
                     <label><input type="checkbox" value=1>Out of intersection</label>
                     <label><input type="checkbox" value=2>Intersection in X</label>
@@ -301,7 +295,7 @@
             <label for="collisionType">Collision Type:</label>
 
             <div class="dropdown">
-                <div onclick="toggleDropdown('col')" class="dropdown-btn">Select collision type</div>
+                <div onclick="toggleDropdown('col')" class="dropdown-btn" data-dropdown="col">Select collision type</div>
                 <div id="col" class="dropdown-content" onclick="event.stopPropagation()">
                     <label><input type="checkbox" value=1>Two vehicles - Frontal</label>
                     <label><input type="checkbox" value=2>Two vehicles - from the rear</label>
@@ -319,7 +313,7 @@
             <label for="lightingCondition">Lighting Condition:</label>
 
             <div class="dropdown">
-                <div onclick="toggleDropdown('lum')" class="dropdown-btn">Select lighting condition</div>
+                <div onclick="toggleDropdown('lum')" class="dropdown-btn" data-dropdown="lum">Select lighting condition</div>
                 <div id="lum" class="dropdown-content" onclick="event.stopPropagation()">
                     <label><input type="checkbox" value="1">Full day</label>
                     <label><input type="checkbox" value="2">Twilight or dawn</label>
@@ -338,7 +332,7 @@
             <label for="Category OF Road">Category Of Road:</label>
 
             <div class="dropdown">
-                <div onclick="toggleDropdown('catr')" class="dropdown-btn">Select category of road</div>
+                <div onclick="toggleDropdown('catr')" class="dropdown-btn" data-dropdown="catr">Select category of road</div>
                 <div id="catr" class="dropdown-content" onclick="event.stopPropagation()">
                     <label><input type="checkbox" value="1">Highway</label>
                     <label><input type="checkbox" value="2">National road</label>
@@ -356,7 +350,7 @@
             <label for="surfaceCondition">Surface Condition:</label>
 
             <div class="dropdown">
-                <div onclick="toggleDropdown('surf')" class="dropdown-btn">Select surface condition</div>
+                <div onclick="toggleDropdown('surf')" class="dropdown-btn" data-dropdown="surf">Select surface condition</div>
                 <div id="surf" class="dropdown-content" onclick="event.stopPropagation()">
                     <label><input type="checkbox" value="1">Normal</label>
                     <label><input type="checkbox" value="2">Wet</label>
@@ -374,7 +368,7 @@
 
             <label for="severityAccident">Severity of the Accident:</label>
             <div class="dropdown">
-                <div onclick="toggleDropdown('grav')" class="dropdown-btn">Select severity of incedent</div>
+                <div onclick="toggleDropdown('grav')" class="dropdown-btn" data-dropdown="grav">Select severity of incedent</div>
                 <div id="grav" class="dropdown-content" onclick="event.stopPropagation()">
                     <label><input type="checkbox" value="1">Unscathed</label>
                     <label><input type="checkbox" value="2">Killed</label>
@@ -390,7 +384,7 @@
             <label for="vehicleType">Vehicle Type:</label>
 
             <div class="dropdown">
-                <div onclick="toggleDropdown('catv')" class="dropdown-btn">Select vehicle type</div>
+                <div onclick="toggleDropdown('catv')" class="dropdown-btn" data-dropdown="catv">Select vehicle type</div>
                 <div id="catv" class="dropdown-content" onclick="event.stopPropagation()">
                     <label><input type="checkbox" value="1">Bicycle</label>
                     <label><input type="checkbox" value="2">Moped</label>
@@ -415,7 +409,7 @@
             <label for="categoryUser">Category User:</label>
 
             <div class="dropdown">
-                <div onclick="toggleDropdown('catu')" class="dropdown-btn">Select user catagory</div>
+                <div onclick="toggleDropdown('catu')" class="dropdown-btn" data-dropdown="catu">Select user catagory</div>
                 <div id="catu" class="dropdown-content" onclick="event.stopPropagation()">
                     <label><input type="checkbox" value="1">Driver</label>
                     <label><input type="checkbox" value="2">Passenger</label>
@@ -429,7 +423,7 @@
             <label for="Security Measures">Security Measures:</label>
 
             <div class="dropdown">
-                <div onclick="toggleDropdown('secu')" class="dropdown-btn">Select used security mesures</div>
+                <div onclick="toggleDropdown('secu')" class="dropdown-btn" data-dropdown="secu">Select used security mesures</div>
                 <div id="secu" class="dropdown-content" onclick="event.stopPropagation()">
                     <label><input type="checkbox" value="11">Belt</label>
                     <label><input type="checkbox" value="21">Helmet</label>

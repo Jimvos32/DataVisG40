@@ -6,7 +6,8 @@ import HeatMap from './heatMap.js';
 import { graph } from "./graph.js"
 import * as d3 from "https://cdn.jsdelivr.net/npm/d3@7/+esm";
 
-var queryDict = {}
+var queryDict = {};
+var defaultStrings = {};
 var queryGraphData = new QueryGraphData();
 var filterGraph = null;
 var heat = null;
@@ -49,6 +50,23 @@ function setClickListeners() {
                         queryDict[dropdown.id].delete(parseInt(this.value));
                     }
 
+                }
+
+                var selected = queryDict[dropdown.id];
+                var dropdownText = document.querySelector('.dropdown-btn[data-dropdown='+ dropdown.id +']');
+                if(!defaultStrings[dropdown.id]) {
+                    defaultStrings[dropdown.id] = dropdownText.textContent;
+                }
+                if(!selected) {
+                    dropdownText.textContent = defaultStrings[dropdown.id];
+                } else {
+                    var strings = [];
+                    for (let val of selected) {
+                        var element = document.querySelector('#' + dropdown.id + ' input[value="' + val + '"]').parentNode;
+                        strings.push(" " + element.textContent);
+                    }
+                    
+                    dropdownText.textContent = strings;
                 }
                 prepareQuery();
             });

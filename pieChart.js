@@ -23,6 +23,7 @@ export default class PieChart {
 
         this.transDict = {"1": "Unscathed", "2": "Killed", "3": "Hospitalized wounded", "4": "Light injury"}
         this.margin = {top: 30, right: 30, bottom: 100, left: 60};
+        window.pie = this
         this.setupPie();
     }
 
@@ -52,7 +53,10 @@ export default class PieChart {
                 // Color the segments
                 var colors = ["#66c2a5", "#41ae76", "#238b45", "#005824"];
                 return colors[i];
-            });
+            })
+            .on("mouseover",  handleMouseOver)
+            .on("mouseout", handleMouseOut)
+            .on("mousemove", handleMouseMove);
 
 
         this.legend = this.svg.selectAll("legend")
@@ -70,7 +74,10 @@ export default class PieChart {
             .style("fill", function(d, i) { 
                 var colors = ["#66c2a5", "#41ae76", "#238b45", "#005824"];
                 return colors[i % colors.length];
-            });
+            })
+            .on("mouseover",  handleMouseOverLegend)
+            .on("mouseout", handleMouseOut)
+            .on("mousemove", handleMouseMove);
         
         // Create a text for the label of each legend item
         this.legend.append("text")
@@ -82,6 +89,86 @@ export default class PieChart {
             .style("visibility", "visible")
             .style("font-size", "10px")
             .text(function(d) { return d.label; });
+
+
+        // Tooltip container
+        // this.tooltip = d3.select("body")
+        // .append("div")
+        // .attr("class", "tooltip")
+
+        var tooltip = window.graph.tooltip
+        var svg = this.svg
+
+        // Tooltip functions
+        function handleMouseOver(d, j) {
+            // Adjust the opacity of all paths
+            svg.selectAll("path")
+                .style("opacity", 0.5);
+            svg.selectAll("rect")
+                .style("opacity", (a) => (a.label === j.data.label) ? 1 : 0.5);
+
+            // Highlight the selected paths
+            d3.select(this)
+                .style("opacity", 1)
+                .attr("fill", "orange"); // Change color on hover
+            
+            console.log(d3.select(this))
+
+            tooltip.transition()
+                .duration(500)
+                .style("opacity", 0.9)
+                .style("display", 'unset');
+            window.tooltipString = j.data.label + ": " + j.data.value + " (" + Math.round(((j.data.value/window.graph.sumCount) + Number.EPSILON) * 10000) / 100 + "%)";
+
+        }
+
+        function handleMouseOverLegend(d, j) {
+            // Adjust the opacity of all paths
+            svg.selectAll("path")
+                .style("opacity", (a) => (a.data.label === j.label) ? 1 : 0.5);
+            svg.selectAll("rect")
+                .style("opacity", 0.5);
+
+            // Highlight the selected paths
+            d3.select(this)
+                .style("opacity", 1)
+                .attr("fill", "orange"); // Change color on hover
+            
+            console.log(d3.select(this))
+
+            tooltip.transition()
+                .duration(500)
+                .style("opacity", 0.9)
+                .style("display", 'unset');
+            window.tooltipString = j.label + ": " + j.value + " (" + Math.round(((j.value/window.graph.sumCount) + Number.EPSILON) * 10000) / 100 + "%)";
+
+        }
+
+        function handleMouseOut(d, j) {
+            // Restore the opacity of all paths
+            svg.selectAll("path")
+                .style("opacity", 1)
+                .attr("fill", "#69b3a2"); // Restore original color on mouseout
+            
+            svg.selectAll("rect")
+                .style("opacity", 1)
+                .attr("fill", "#69b3a2");
+
+            // Hide tooltip
+            tooltip.transition()
+                .duration(1)
+                .style("opacity", 0)
+                .style("display", 'none')
+        }
+
+        function handleMouseMove(d) {
+            // Display tooltip
+            var [xpt, ypt] = d3.pointer(d);
+            console.log(d);
+            tooltip.html(`${window.tooltipString}`)
+                .style("left", (d.screenX + 10) + "px")
+                .style("top", (d.screenY - 128) + "px");
+        }
     }
 
     async updatePie(queryDict) {
@@ -93,6 +180,8 @@ export default class PieChart {
         var g = this.svg.selectAll(".pie")
             .data(pie(data));
 
+
+
         // Add a class to the pie chart g elements
         var enter = g.enter()
             .append("g")
@@ -102,7 +191,10 @@ export default class PieChart {
             .style("fill", function(d, i) {
                 var colors = ["#66c2a5", "#41ae76", "#238b45", "#005824"];
                 return colors[i];
-            });
+            })
+            // .on("mouseover",  handleMouseOver)
+            // .on("mouseout", handleMouseOut)
+            // .on("mousemove", handleMouseMove);
        
         // Handle the update selection
         g.select("path")
@@ -116,6 +208,61 @@ export default class PieChart {
 
         // Handle the exit selection
         g.exit().remove();
+
+        // Tooltip container
+        this.tooltip = d3.select("body")
+        .append("div")
+        .attr("class", "tooltip")
+
+        var tooltip = window.graph.tooltip
+        var svg = this.svg
+
+        // Tooltip functions
+        function handleMouseOver(d, j) {
+            // Adjust the opacity of all paths
+            svg.selectAll("path")
+                .style("opacity", 0.5);
+            svg.selectAll("rect")
+                .style("opacity", (a) => (a.label === j.data.label) ? 1 : 0.5);
+
+            // Highlight the selected paths
+            d3.select(this)
+                .style("opacity", 1)
+                .attr("fill", "orange"); // Change color on hover
+            
+            console.log(d3.select(this))
+
+            tooltip.transition()
+                .duration(500)
+                .style("opacity", 0.9)
+                .style("display", 'unset');
+            window.tooltipString = j.data.label + ": " + j.data.value + " (" + Math.round(((j.data.value/window.graph.sumCount) + Number.EPSILON) * 10000) / 100 + "%)";
+
+        }
+
+        function handleMouseOut(d, j) {
+            // Restore the opacity of all paths
+            svg.selectAll("path")
+                .style("opacity", 1)
+                .attr("fill", "#69b3a2"); // Restore original color on mouseout
+            
+            svg.selectAll("rect")
+                .style("opacity", 1)
+                .attr("fill", "#69b3a2");
+
+            // Hide tooltip
+            tooltip.transition()
+                .duration(1)
+                .style("opacity", 0)
+                .style("display", 'none')
+        }
+
+        function handleMouseMove(d) {
+            // Display tooltip
+            tooltip.html(`${window.tooltipString}`)
+                .style("left", (d.clientX + 10) + "px")
+                .style("top", (d.clientY - 128) + "px");
+        }
     }
 
     arcTween(d) {

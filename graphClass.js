@@ -6,11 +6,14 @@ export default class Graphclass {
         this.query = query;
         this.id = id;
         this.svg = null;
+        this.tooltip = null;
+        this.sumCount = 0;
         this.width = 460;
         this.height = 270;
-
+        this.tooltipString = "";
         this.transDict = {"1": "Unscathed", "2": "Killed", "3": "Hospitalized wounded", "4": "Light injury"}
         this.margin = {top: 30, right: 30, bottom: 100, left: 60};
+        window.graph = this;
         this.setupGraph();
     }
 
@@ -44,6 +47,11 @@ export default class Graphclass {
 
         const [max, data] = await this.getData([{}]);
 
+        this.sumCount = data.reduce((sum, element) => {
+            return sum + element.y;
+          },0);
+
+
         // Add Y axis
         var yScale = d3.scaleLinear() 
             .domain([0, max])
@@ -60,11 +68,72 @@ export default class Graphclass {
             .attr("y", (d) => yScale(d.y))
             .attr("width", xScale.bandwidth())
             .attr("height", (d) => this.height - yScale(d.y))
-            .attr("fill", "#69b3a2");
+            .attr("fill", "#69b3a2")
+            .on("mouseover",  handleMouseOver)
+            .on("mouseout", handleMouseOut)
+            .on("mousemove", handleMouseMove);
+
+        // Tooltip container
+        this.tooltip = d3.select("body")
+        .append("div")
+        .attr("class", "tooltip")
+
+        var tooltip = this.tooltip
+        var svg = this.svg
+        // Tooltip functions
+        function handleMouseOver(d, j) {
+            // Adjust the opacity of all bars
+            svg.selectAll("rect")
+                .style("opacity", 0.5);
+
+            // Highlight the selected bar
+            d3.select(this)
+                .style("opacity", 1)
+                .attr("fill", "orange"); // Change color on hover
+
+            tooltip.transition()
+                .duration(500)
+                .style("opacity", 0.9)
+                .style("display", 'unset');
+            window.tooltipString = j.x + ": " + j.y + " (" + Math.round(((j.y/window.graph.sumCount) + Number.EPSILON) * 10000) / 100 + "%)";
+
+        }
+
+        function handleMouseOut(d, j) {
+            // Restore the opacity of all bars
+            svg.selectAll("rect")
+                .style("opacity", 1)
+                .attr("fill", "#69b3a2"); // Restore original color on mouseout
+
+            // Hide tooltip
+            tooltip.transition()
+                .duration(1)
+                .style("opacity", 0)
+                .style("display", 'none')
+        }
+
+        function handleMouseMove(d) {
+            // Display tooltip
+            console.log(d)
+            var [xpt, ypt] = d3.pointer(d);
+            tooltip.html(`${window.tooltipString}`)
+                .style("left", (d.screenX + 10) + "px")
+                .style("top", (d.screenY - 128) + "px");
+        }
+
+
     }
 
     async updateGraph(queryDict) {
         const [max, data] = await this.getData(queryDict);
+
+        
+        this.sumCount = data.reduce((sum, element) => {
+            return sum + element.y;
+          },0);
+
+        console.log(this.sumCount);
+
     
         var xScale = d3.scaleBand()
             .range([0, this.width])
