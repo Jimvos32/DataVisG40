@@ -73,12 +73,8 @@ export default class Graphclass {
             .on("mouseout", handleMouseOut)
             .on("mousemove", handleMouseMove);
 
-        // Tooltip container
-        this.tooltip = d3.select("body")
-        .append("div")
-        .attr("class", "tooltip")
 
-        var tooltip = this.tooltip
+        var tooltip = window.pie.tooltip
         var svg = this.svg
         // Tooltip functions
         function handleMouseOver(d, j) {
@@ -95,7 +91,7 @@ export default class Graphclass {
                 .duration(500)
                 .style("opacity", 0.9)
                 .style("display", 'unset');
-            window.tooltipString = j.x + ": " + j.y + " (" + Math.round(((j.y/window.graph.sumCount) + Number.EPSILON) * 10000) / 100 + "%)";
+            window.tooltipString = j.x + ": " + j.y + " (" + Math.round(((j.y/window.pie.sumCount) + Number.EPSILON) * 10000) / 100 + "%)";
 
         }
 

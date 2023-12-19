@@ -127,13 +127,14 @@ export default class HeatMap {
 
         document.getElementById('loading').style.display = 'none';
 
+
         // Tooltip container
         this.tooltip = d3.select("body")
         .append("div")
         .attr("class", "tooltip")
 
-        var tooltip = this.tooltip
-        var svg = this.svg
+        var tooltip = this.tooltip;
+        var svg = this.svg;
         // Tooltip functions
         function handleMouseOver(d, j) {
             // Adjust the opacity of all bars
@@ -303,7 +304,7 @@ export default class HeatMap {
             if (mode == 1) {
                 window.tooltipString = "Fatality Rate" + ": "  + + Math.round((j) * 10000) / 100 + "%";
             } else {
-                window.tooltipString = "Occurrences" + ": "  + j
+                window.tooltipString = "Occurrences" + ": "  + j;
             }
 
         }

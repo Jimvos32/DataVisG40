@@ -110,7 +110,7 @@ export default class StackGraph {
         // .append("div")
         // .attr("class", "tooltip")
 
-        var tooltip = window.graph.tooltip
+        var tooltip = window.pie.tooltip
         var svg = this.svg
         // Tooltip functions
         function handleMouseOver(d, j) {
@@ -268,7 +268,7 @@ export default class StackGraph {
             .call(d3.axisLeft(yScale));
 
 
-        var tooltip = window.graph.tooltip
+        var tooltip = window.pie.tooltip
         var svg = this.svg
         // Tooltip functions
         function handleMouseOver(d, j) {

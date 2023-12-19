@@ -1,6 +1,6 @@
 import QueryGraphData from './queryGraphData.js';
-import Graphclass from './graphClass.js';
 import PieChart from './pieChart.js';
+import Graphclass from './graphClass.js';
 import StackGraph from './stackedGraph.js';
 import HeatMap from './heatMap.js';
 import { graph } from "./graph.js"
@@ -22,8 +22,8 @@ async function init() {
     await queryGraphData.getAllData('Data/scaled_collection.csv');
     console.log("finished loading data");
     setClickListeners();
-    gr = new Graphclass(queryGraphData, "plot");
     pie = new PieChart(queryGraphData, "pie");
+    gr = new Graphclass(queryGraphData, "plot");
     filterGraph = new StackGraph(queryGraphData, "filter");
     heat = new HeatMap(queryGraphData, "heatmap");
     

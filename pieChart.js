@@ -6,6 +6,8 @@ export default class PieChart {
         this.query = query;
         this.id = id;
         this.svg = null;
+        this.sumCount = 0;
+        this.tooltip = null;
         this.g = null;
         this.width = 460;
         this.height = 270;
@@ -30,6 +32,10 @@ export default class PieChart {
 
     async setupPie() {
         const data = await this.getData([{}]);
+
+        this.sumCount = data.reduce((sum, element) => {
+            return sum + element.value;
+          },0);
 
 
         // Select the div and append an svg element to it
@@ -94,11 +100,11 @@ export default class PieChart {
 
 
         // Tooltip container
-        // this.tooltip = d3.select("body")
-        // .append("div")
-        // .attr("class", "tooltip")
+        this.tooltip = d3.select("body")
+        .append("div")
+        .attr("class", "tooltip")
 
-        var tooltip = window.graph.tooltip
+        var tooltip = this.tooltip
         var svg = this.svg
 
         // Tooltip functions
@@ -120,7 +126,7 @@ export default class PieChart {
                 .duration(500)
                 .style("opacity", 0.9)
                 .style("display", 'unset');
-            window.tooltipString = j.data.label + ": " + j.data.value + " (" + Math.round(((j.data.value/window.graph.sumCount) + Number.EPSILON) * 10000) / 100 + "%)";
+            window.tooltipString = j.data.label + ": " + j.data.value + " (" + Math.round(((j.data.value/window.pie.sumCount) + Number.EPSILON) * 10000) / 100 + "%)";
 
         }
 
@@ -142,7 +148,7 @@ export default class PieChart {
                 .duration(500)
                 .style("opacity", 0.9)
                 .style("display", 'unset');
-            window.tooltipString = j.label + ": " + j.value + " (" + Math.round(((j.value/window.graph.sumCount) + Number.EPSILON) * 10000) / 100 + "%)";
+            window.tooltipString = j.label + ": " + j.value + " (" + Math.round(((j.value/window.pie.sumCount) + Number.EPSILON) * 10000) / 100 + "%)";
 
         }
 
@@ -171,10 +177,16 @@ export default class PieChart {
                 .style("left", (d.screenX + 10) + "px")
                 .style("top", (d.screenY - 128) + "px");
         }
+
     }
 
     async updatePie(queryDict) {
         const data = await this.getData(queryDict);
+
+        this.sumCount = data.reduce((sum, element) => {
+            return sum + element.value;
+            },0);
+        console.log(this.sumCount);
     
         // Create a new data join with the updated data
         var pie = d3.pie().sort(null).value(function(d) { return d.value; });
