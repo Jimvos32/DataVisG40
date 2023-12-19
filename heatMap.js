@@ -71,7 +71,10 @@ export default class HeatMap {
             .attr("y", (d, i) => yScale(labelsY[Math.floor(i / data[0].length)]))
             .attr("width", xScale.bandwidth())
             .attr("height", yScale.bandwidth())
-            .style("fill", d => colorScale(d));
+            .style("fill", d => colorScale(d))
+            .on("mouseover",  handleMouseOver)
+            .on("mouseout", handleMouseOut)
+            .on("mousemove", handleMouseMove);
 
         // Add the axes.attr("transform", "translate(-10,0)rotate(-45)")
             
@@ -123,6 +126,55 @@ export default class HeatMap {
             .call(yAxisLegend);
 
         document.getElementById('loading').style.display = 'none';
+
+        // Tooltip container
+        this.tooltip = d3.select("body")
+        .append("div")
+        .attr("class", "tooltip")
+
+        var tooltip = this.tooltip
+        var svg = this.svg
+        // Tooltip functions
+        function handleMouseOver(d, j) {
+            // Adjust the opacity of all bars
+            svg.selectAll("rect")
+                .style("opacity", 0.5);
+
+            // Highlight the selected bar
+            d3.select(this)
+                .style("opacity", 1)
+                .attr("fill", "orange"); // Change color on hover
+
+            tooltip.transition()
+                .duration(500)
+                .style("opacity", 0.9)
+                .style("display", 'unset');
+            console.log(j);
+            window.tooltipString = "Fatality Rate" + ": "  + + Math.round((j) * 10000) / 100 + "%";
+
+        }
+
+        function handleMouseOut(d, j) {
+            // Restore the opacity of all bars
+            svg.selectAll("rect")
+                .style("opacity", 1)
+                .attr("fill", "#69b3a2"); // Restore original color on mouseout
+
+            // Hide tooltip
+            tooltip.transition()
+                .duration(1)
+                .style("opacity", 0)
+                .style("display", 'none')
+        }
+
+        function handleMouseMove(d) {
+            // Display tooltip
+            console.log(d)
+            var [xpt, ypt] = d3.pointer(d);
+            tooltip.html(`${window.tooltipString}`)
+                .style("left", (d.screenX + 10) + "px")
+                .style("top", (d.screenY - 128) + "px");
+        }
     }
 
     async updateHeater(queryDict, labelsX, labelsY, mode) {
@@ -162,7 +214,10 @@ export default class HeatMap {
             .attr("y", (d, i) => yScale(labelsY[Math.floor(i / data[0].length)]))
             .attr("width", xScale.bandwidth())
             .attr("height", yScale.bandwidth())
-            .style("fill", d => colorScale(d));
+            .style("fill", d => colorScale(d))
+            .on("mouseover",  handleMouseOver)
+            .on("mouseout", handleMouseOut)
+            .on("mousemove", handleMouseMove);
 
             
         this.svg.append("g")
@@ -220,6 +275,60 @@ export default class HeatMap {
         let endTime = performance.now();
         let elapsedTime = endTime - startTime;
         console.log(`Elapsed Time: ${elapsedTime} milliseconds`);
+
+
+
+        // Tooltip container
+        this.tooltip = d3.select("body")
+        .append("div")
+        .attr("class", "tooltip")
+
+        var tooltip = this.tooltip
+        var svg = this.svg
+        // Tooltip functions
+        function handleMouseOver(d, j) {
+            // Adjust the opacity of all bars
+            svg.selectAll("rect")
+                .style("opacity", 0.5);
+
+            // Highlight the selected bar
+            d3.select(this)
+                .style("opacity", 1)
+                .attr("fill", "orange"); // Change color on hover
+
+            tooltip.transition()
+                .duration(500)
+                .style("opacity", 0.9)
+                .style("display", 'unset');
+            if (mode == 1) {
+                window.tooltipString = "Fatality Rate" + ": "  + + Math.round((j) * 10000) / 100 + "%";
+            } else {
+                window.tooltipString = "Occurrences" + ": "  + j
+            }
+
+        }
+
+        function handleMouseOut(d, j) {
+            // Restore the opacity of all bars
+            svg.selectAll("rect")
+                .style("opacity", 1)
+                .attr("fill", "#69b3a2"); // Restore original color on mouseout
+
+            // Hide tooltip
+            tooltip.transition()
+                .duration(1)
+                .style("opacity", 0)
+                .style("display", 'none')
+        }
+
+        function handleMouseMove(d) {
+            // Display tooltip
+            console.log(d)
+            var [xpt, ypt] = d3.pointer(d);
+            tooltip.html(`${window.tooltipString}`)
+                .style("left", (d.screenX + 10) + "px")
+                .style("top", (d.screenY - 128) + "px");
+        }
 
     }
     

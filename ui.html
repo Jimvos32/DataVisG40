@@ -227,10 +227,10 @@
                             <option value="secu">Security measures</option>
                         </select>
 
-                    <label for="weatherCondition">Select mesure:</label>
+                    <label for="weatherCondition">Select metric:</label>
                         <select id="weatherCondition" onchange="handleSelectChange(event, 3)">
                             <option value="1">Fatality ratio</option>
-                            <option value="2">Occurences</option>
+                            <option value="2">Occurrences</option>
                         </select>
 
                 </div>
@@ -423,7 +423,7 @@
             <label for="Security Measures">Security Measures:</label>
 
             <div class="dropdown">
-                <div onclick="toggleDropdown('secu')" class="dropdown-btn" data-dropdown="secu">Select used security mesures</div>
+                <div onclick="toggleDropdown('secu')" class="dropdown-btn" data-dropdown="secu">Select used security measures</div>
                 <div id="secu" class="dropdown-content" onclick="event.stopPropagation()">
                     <label><input type="checkbox" value="11">Belt</label>
                     <label><input type="checkbox" value="21">Helmet</label>

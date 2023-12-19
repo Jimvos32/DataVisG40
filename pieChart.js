@@ -209,60 +209,6 @@ export default class PieChart {
         // Handle the exit selection
         g.exit().remove();
 
-        // Tooltip container
-        this.tooltip = d3.select("body")
-        .append("div")
-        .attr("class", "tooltip")
-
-        var tooltip = window.graph.tooltip
-        var svg = this.svg
-
-        // Tooltip functions
-        function handleMouseOver(d, j) {
-            // Adjust the opacity of all paths
-            svg.selectAll("path")
-                .style("opacity", 0.5);
-            svg.selectAll("rect")
-                .style("opacity", (a) => (a.label === j.data.label) ? 1 : 0.5);
-
-            // Highlight the selected paths
-            d3.select(this)
-                .style("opacity", 1)
-                .attr("fill", "orange"); // Change color on hover
-            
-            console.log(d3.select(this))
-
-            tooltip.transition()
-                .duration(500)
-                .style("opacity", 0.9)
-                .style("display", 'unset');
-            window.tooltipString = j.data.label + ": " + j.data.value + " (" + Math.round(((j.data.value/window.graph.sumCount) + Number.EPSILON) * 10000) / 100 + "%)";
-
-        }
-
-        function handleMouseOut(d, j) {
-            // Restore the opacity of all paths
-            svg.selectAll("path")
-                .style("opacity", 1)
-                .attr("fill", "#69b3a2"); // Restore original color on mouseout
-            
-            svg.selectAll("rect")
-                .style("opacity", 1)
-                .attr("fill", "#69b3a2");
-
-            // Hide tooltip
-            tooltip.transition()
-                .duration(1)
-                .style("opacity", 0)
-                .style("display", 'none')
-        }
-
-        function handleMouseMove(d) {
-            // Display tooltip
-            tooltip.html(`${window.tooltipString}`)
-                .style("left", (d.clientX + 10) + "px")
-                .style("top", (d.clientY - 128) + "px");
-        }
     }
 
     arcTween(d) {
