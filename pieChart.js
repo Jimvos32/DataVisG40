@@ -128,6 +128,7 @@ export default class PieChart {
                 .style("display", 'unset');
             window.tooltipString = j.data.label + ": " + j.data.value + " (" + Math.round(((j.data.value/window.pie.sumCount) + Number.EPSILON) * 10000) / 100 + "%)";
 
+
         }
 
         function handleMouseOverLegend(d, j) {
@@ -178,6 +179,8 @@ export default class PieChart {
                 .style("top", (d.clientY - 40) + "px");
         }
 
+        document.getElementById("totalSum").innerText = this.sumCount;
+
     }
 
     async updatePie(queryDict) {
@@ -197,6 +200,7 @@ export default class PieChart {
         this.svg.selectAll("rect")
             .data(data);
 
+        document.getElementById("totalSum").innerText = this.sumCount;
         // // Add a class to the pie chart g elements
         // var enter = g.enter()
         //     .append("g")

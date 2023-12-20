@@ -392,7 +392,7 @@
                     <label for="categoryUser">Category user:</label>
 
                     <div class="dropdown">
-                        <div onclick="toggleDropdown('catu')" class="dropdown-btn" data-dropdown="catu">Select user catagory</div>
+                        <div onclick="toggleDropdown('catu')" class="dropdown-btn" data-dropdown="catu">Select user category</div>
                         <div id="catu" class="dropdown-content" onclick="event.stopPropagation()">
                             <label><input type="checkbox" value="1">Driver</label>
                             <label><input type="checkbox" value="2">Passenger</label>
@@ -423,11 +423,11 @@
             <div id="graphs"> 
                 <div id="leftColumn">
                     <div id = "stackedBox">
-                        <h3 style="text-align: center;">Number of accidents</h3>
+                        <h3 style="text-align: center;">Number of casualties <span id="totalSum" style="color:blue"></span></h3>
                         <div id = "filter"></div>
                     </div>
                     <div id = "pieBox">
-                        <h3 style="text-align: center;">Severity distribution of casualties</h3>
+                        <h3 style="text-align: center;">Severity distribution</h3>
                         <div id = "pie"></div>
                     </div>
                 </div>
