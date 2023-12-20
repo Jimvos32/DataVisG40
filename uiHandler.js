@@ -23,6 +23,7 @@ async function init() {
     console.log("finished loading data");
     setClickListeners();
     pie = new PieChart(queryGraphData, "pie");
+    //gr = new Graphclass(queryGraphData, "plot");
     filterGraph = new StackGraph(queryGraphData, "filter");
     heat = new HeatMap(queryGraphData, "heatmap");
     
@@ -114,7 +115,7 @@ function setClickListeners() {
 }
 
 function prepareQuery() {
-    gr.updateGraph([queryDict]);
+    //gr.updateGraph([queryDict]);
     pie.updatePie([queryDict]);
     
 

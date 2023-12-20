@@ -130,7 +130,7 @@ export default class StackGraph {
                 .style("display", 'unset');
             var sum = 0;
             for (var key in j.data) {
-                if(key == 'category' || key == 'total') {
+                if(key == 'category' || key == 'total' || j.data[key] == 0) {
                     continue;
                 } else {
                     if (j[0] == sum) {
