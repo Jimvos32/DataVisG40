@@ -173,8 +173,8 @@ export default class HeatMap {
             // console.log(d)
             var [xpt, ypt] = d3.pointer(d);
             tooltip.html(`${window.tooltipString}`)
-                .style("left", (d.screenX + 10) + "px")
-                .style("top", (d.screenY - 128) + "px");
+                .style("left", (d.clientX + 10) + "px")
+                .style("top", (d.clientY - 40) + "px");
         }
     }
 
@@ -327,8 +327,8 @@ export default class HeatMap {
             // console.log(d)
             var [xpt, ypt] = d3.pointer(d);
             tooltip.html(`${window.tooltipString}`)
-                .style("left", (d.screenX + 10) + "px")
-                .style("top", (d.screenY - 128) + "px");
+                .style("left", (d.clientX + 10) + "px")
+                .style("top", (d.clientY - 40) + "px");
         }
 
     }
