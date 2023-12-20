@@ -22,7 +22,7 @@
             border-radius: 8px;
             box-shadow: 0 0 15px rgba(0, 0, 0, 0.2), 0 0 10px rgba(0, 0, 0, 0.1);
             border: 5px solid black;
-            overflow-y: auto; /* Enable vertical scrolling if content overflows */
+            overflow-y: visible; /* Enable vertical scrolling if content overflows */
         }
 
         label {
@@ -121,6 +121,15 @@
             color: white;
             background-color:#1967D2;
        }
+
+        #dropdowns {
+            display: flex;
+            gap: 20px; /* Adjust the gap according to your preference */
+        }
+
+        .dropdown2 {
+            flex: 1; /* Distribute available space equally among dropdowns */
+        }
     </style>
 
     
@@ -152,7 +161,7 @@
 
     .flex-container {
         display: flex;
-        flex-direction: row;
+        flex-direction: column;
         justify-content: space-between;
         align-items: start;
     }
@@ -418,7 +427,7 @@
                         <div id = "filter"></div>
                     </div>
                     <div id = "pieBox">
-                        <h3 style="text-align: center;">Severity distribution of causulties</h3>
+                        <h3 style="text-align: center;">Severity distribution of casualties</h3>
                         <div id = "pie"></div>
                     </div>
                 </div>
@@ -427,8 +436,9 @@
                     <div id="content">
                         <div id = "heatMapBox" class="flex-container">
                             <div id="dropdowns">
-                                <label for="weatherCondition">Filter for x-axis:</label>
-                                    <select id="weatherCondition" onchange="handleSelectChange(event, 1)">
+                                <div class="dropdown2">
+                                    <label for="xAxisFilter">Filter for x-axis:</label>
+                                    <select id="xAxisFilter" onchange="handleSelectChange(event, 1)">
                                         <option value="atm">Weather condition</option>
                                         <option value="int">Intersection type</option>
                                         <option value="col">Collision type</option>
@@ -439,9 +449,11 @@
                                         <option value="catu">Category user</option>
                                         <option value="secu">Security measures</option>
                                     </select>
-            
-                                <label for="weatherCondition">Filter for y-axis:</label>
-                                    <select id="weatherCondition" onchange="handleSelectChange(event, 2)">
+                                </div>
+
+                                <div class="dropdown2">
+                                    <label for="yAxisFilter">Filter for y-axis:</label>
+                                    <select id="yAxisFilter" onchange="handleSelectChange(event, 2)">
                                         <option value="int">Intersection type</option>
                                         <option value="atm">Weather condition</option>
                                         <option value="col">Collision type</option>
@@ -452,20 +464,20 @@
                                         <option value="catu">Category user</option>
                                         <option value="secu">Security measures</option>
                                     </select>
-            
-                                <label for="weatherCondition">Select mesure:</label>
-                                    <select id="weatherCondition" onchange="handleSelectChange(event, 3)">
+                                </div>
+
+                                <div class="dropdown2">
+                                    <label for="measureSelect">Select measure:</label>
+                                    <select id="measureSelect" onchange="handleSelectChange(event, 3)">
                                         <option value="1">Fatality ratio</option>
                                         <option value="2">Occurences</option>
                                     </select>
-            
-                            </div>
-            
+                                </div>
+                            </div> 
                             <div id="heatmapContainer" class="heatmap-loading-container">
                                 <div id="heatmap"></div>
                                 <div id="loading" class="loader"></div>
-                            </div>
-            
+                            </div>         
                         </div>
                     </div>
 
