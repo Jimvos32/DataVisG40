@@ -6,11 +6,12 @@ export default class StackGraph {
         this.query = query;
         this.id = id;
         this.svg = null;
-        this.width = 460;
-        this.height = 270;
+        this.width = window.innerWidth * 0.3;
+        this.height = window.innerHeight * 0.2;
+    
 
         this.transDict = {"1": "Unscathed", "2": "Killed", "3": "Hospitalized wounded", "4": "Light injury"}
-        this.margin = {top: 30, right: 30, bottom: 100, left: 60};
+        this.margin = {top: 30, right: 30, bottom: 120, left: 60};
         this.setupGraph();
     }
 
@@ -37,7 +38,7 @@ export default class StackGraph {
 
     
         var xScale = d3.scaleBand()
-            .range([0, 20 * data.length])
+            .range([0, 48 * data.length])
             .domain(data.map(function(d) { return d.category; }))
             .padding(0.2);
     
@@ -122,7 +123,7 @@ export default class StackGraph {
             d3.select(this)
                 .style("opacity", 1)
                 //.attr("fill", "orange"); // Change color on hover
-            console.log(j)
+            // console.log(j)
             tooltip.transition()
                 .duration(500)
                 .style("opacity", 0.9)
@@ -158,7 +159,7 @@ export default class StackGraph {
 
         function handleMouseMove(d) {
             // Display tooltip
-            console.log(d)
+            // console.log(d)
             var [xpt, ypt] = d3.pointer(d);
             tooltip.html(`${window.tooltipString}`)
                 .style("left", (d.screenX + 10) + "px")
@@ -171,7 +172,7 @@ export default class StackGraph {
         const data = await this.getFilterStats(filter, queryDict);
     
         var xScale = d3.scaleBand()
-            .range([0, 20 * data.length])
+            .range([0, 48 * data.length])
             .domain(data.map(function (d) { return d.category; }))
             .padding(0.2);
     
@@ -196,19 +197,18 @@ export default class StackGraph {
         // Handle the exit selection for groups
         bars.exit().remove();
     
-        // Handle the update selection for groups
         bars.transition()
-            .duration(1000)
-            .attr("transform", function (d) {
-                return "translate(" + xScale(d[0].data.category) + ",0)";
-            });
-    
+        .duration(1000)
+        .attr("transform", function (d) {
+            return "translate(0,0)"; // Change this line
+        });
+
         // Handle the enter selection for groups
         var newGroups = bars.enter().append("g")
-            .attr("class", "bar-group")
-            .attr("transform", function (d) {
-                return "translate(" + xScale(d[0].data.category) + ",0)";
-            });
+        .attr("class", "bar-group")
+        .attr("transform", function (d) {
+            return "translate(0,0)"; // And this line
+        });
             
     
         // Merge the new groups with the update selection
@@ -280,7 +280,7 @@ export default class StackGraph {
             d3.select(this)
                 .style("opacity", 1)
                 //.attr("fill", "orange"); // Change color on hover
-            console.log(j)
+            // console.log(j)
             tooltip.transition()
                 .duration(500)
                 .style("opacity", 0.9)
@@ -316,7 +316,7 @@ export default class StackGraph {
 
         function handleMouseMove(d) {
             // Display tooltip
-            console.log(d)
+            // console.log(d)
             var [xpt, ypt] = d3.pointer(d);
             tooltip.html(`${window.tooltipString}`)
                 .style("left", (d.screenX + 10) + "px")

@@ -9,8 +9,8 @@ export default class PieChart {
         this.sumCount = 0;
         this.tooltip = null;
         this.g = null;
-        this.width = 460;
-        this.height = 270;
+        this.width = window.innerWidth * 0.25;
+        this.height = window.innerHeight * 0.25;
         this.lengend = null;
         this.pie = d3.pie().sort(null).value(function(d) { return d.value; });
 
@@ -25,7 +25,7 @@ export default class PieChart {
         
 
         this.transDict = {"1": "Unscathed", "2": "Killed", "3": "Hospitalized wounded", "4": "Light injury"}
-        this.margin = {top: 30, right: 30, bottom: 100, left: 60};
+        this.margin = {top: 30, right: 10, bottom: 30, left: 30};
         window.pie = this
         this.setupPie();
     }
@@ -120,7 +120,7 @@ export default class PieChart {
                 .style("opacity", 1)
                 .attr("fill", "orange"); // Change color on hover
             
-            console.log(d3.select(this))
+            // console.log(d3.select(this))
 
             tooltip.transition()
                 .duration(500)
@@ -142,7 +142,7 @@ export default class PieChart {
                 .style("opacity", 1)
                 .attr("fill", "orange"); // Change color on hover
             
-            console.log(d3.select(this))
+            // console.log(d3.select(this))
 
             tooltip.transition()
                 .duration(500)
@@ -172,7 +172,7 @@ export default class PieChart {
         function handleMouseMove(d) {
             // Display tooltip
             var [xpt, ypt] = d3.pointer(d);
-            console.log(d);
+            // console.log(d);
             tooltip.html(`${window.tooltipString}`)
                 .style("left", (d.screenX + 10) + "px")
                 .style("top", (d.screenY - 128) + "px");

@@ -6,8 +6,8 @@ export default class HeatMap {
         this.query = query;
         this.id = id;
         this.svg = null;
-        this.width = 460;
-        this.height = 270;
+        this.width = window.innerWidth * 0.2;
+        this.height = window.innerHeight * 0.2;
 
         this.margin = {top: 30, right: 30, bottom: 100, left: 200};
         this.setupHeatMap();
@@ -150,7 +150,7 @@ export default class HeatMap {
                 .duration(500)
                 .style("opacity", 0.9)
                 .style("display", 'unset');
-            console.log(j);
+            // console.log(j);
             window.tooltipString = "Fatality Rate" + ": "  + + Math.round((j) * 10000) / 100 + "%";
 
         }
@@ -170,7 +170,7 @@ export default class HeatMap {
 
         function handleMouseMove(d) {
             // Display tooltip
-            console.log(d)
+            // console.log(d)
             var [xpt, ypt] = d3.pointer(d);
             tooltip.html(`${window.tooltipString}`)
                 .style("left", (d.screenX + 10) + "px")
@@ -324,7 +324,7 @@ export default class HeatMap {
 
         function handleMouseMove(d) {
             // Display tooltip
-            console.log(d)
+            // console.log(d)
             var [xpt, ypt] = d3.pointer(d);
             tooltip.html(`${window.tooltipString}`)
                 .style("left", (d.screenX + 10) + "px")
