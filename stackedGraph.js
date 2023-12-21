@@ -180,6 +180,23 @@ export default class StackGraph {
         //     .duration(1000)
         //     .call(d3.axisLeft(yScale));
         // }
+
+        // Add click event for x-axis labels
+        // const xAxisLabels = d3.selectAll('.x-axis .tick text');
+
+        // xAxisLabels.on('click', function(event, d) {
+        //     const category = d;
+        //     console.log(this);
+        //     //toggleBarVisibility(category);
+        //     window.stack.ignore.add(d);
+        //     console.log(window.stack.ignore);
+        //     var filter = window.stack.currentFilter
+        //     //filter.add(filter)
+        //     //filter.push(filter)
+        //     // console.log(queryDict)
+        //     // console.log(filter)
+        //     window.stack.updateFiltergraph(window.stack.currentFilter, window.stack.queryDict, true);
+        // });
         
     }
 
@@ -191,7 +208,7 @@ export default class StackGraph {
             this.queryDict = queryDict;
             console.log("cleared")
         }
-        const data = await this.getFilterStats(filter, queryDict);
+        const data = await this.getFilterStats(filter, queryDict, persist);
     
         var xScale = d3.scaleBand()
             .range([0, 42 * data.length])
@@ -275,13 +292,20 @@ export default class StackGraph {
                 .attr("class", "x-axis");
         }
     
-        // Update the x-axis
         xAxisGroup.transition()
             .duration(1000)
             .call(d3.axisBottom(xScale))
             .selectAll("text")
-            .attr("transform", "translate(-10,0)rotate(-25)")
-            .style("text-anchor", "end");
+            .attr("transform", "translate(-10,0)rotate(-45)")
+            .style("text-anchor", "end")
+            .style("fill", d => {
+                // Check the 'ignored' property to determine if the label should be grey
+                return this.ignore.has(d) ? "grey" : "black";
+            })
+            .style("text-decoration", d => {
+                // Add strikethrough effect if the 'ignored' property is true
+                return this.ignore.has(d) ? "line-through" : "none";
+            });
     
         // Update the y-axis
         this.svg.select(".y-axis")
@@ -351,14 +375,19 @@ export default class StackGraph {
         xAxisLabels.on('click', function(event, d) {
             const category = d;
             console.log(this);
-            //toggleBarVisibility(category);
-            window.stack.ignore.add(d);
+            if(window.stack.ignore.has(d)) {
+                window.stack.ignore.delete(d);
+                console.log("removing")
+                //toggleBarVisibility(category);
+            } else {
+                window.stack.ignore.add(d);
+                //toggleBarVisibility(category);
+            }
             console.log(window.stack.ignore);
-            var filter = window.stack.currentFilter
             //filter.add(filter)
             //filter.push(filter)
-            console.log(queryDict)
-            console.log(filter)
+            // console.log(queryDict)
+            // console.log(filter)
             window.stack.updateFiltergraph(window.stack.currentFilter, window.stack.queryDict, true);
         });
     }
@@ -385,7 +414,7 @@ export default class StackGraph {
         return [max, data];
     }
 
-    async getFilterStats(filter, queryDict) {
+    async getFilterStats(filter, queryDict, persist=false) {
         const [str, list] = filter;
 
         
@@ -406,9 +435,15 @@ export default class StackGraph {
         for (let i = 0; i < res.length; i++) {
             var add = {};
             add["category"] = list[i][0];
-            add["heavy"] = res[i][1][2] + res[i][1][3];
-            add["light"] = res[i][1][1] + res[i][1][4];
-            add["total"] = res[i][0];
+            if(persist && this.ignore.has(list[i][0])){
+                add["heavy"] = 0;
+                add["light"] = 0;
+                add["total"] = 0;//res[i][0];
+            } else {
+                add["heavy"] = res[i][1][2] + res[i][1][3];
+                add["light"] = res[i][1][1] + res[i][1][4];
+                add["total"] = res[i][0];
+            }
             
             // add["heavy"] = res[i][1][2];
             // add["light"] = res[i][1][1] + res[i][1][3] + res[i][1][4];
