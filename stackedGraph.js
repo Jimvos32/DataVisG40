@@ -296,7 +296,7 @@ export default class StackGraph {
             .duration(1000)
             .call(d3.axisBottom(xScale))
             .selectAll("text")
-            .attr("transform", "translate(-10,0)rotate(-45)")
+            .attr("transform", "translate(-10,0)rotate(-25)")
             .style("text-anchor", "end")
             .style("fill", d => {
                 // Check the 'ignored' property to determine if the label should be grey
