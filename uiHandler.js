@@ -15,6 +15,8 @@ var gr = null;
 var pie = null;
 var openDropdown = null;
 var heatMapVals = {1: "atm", 2: "int", 3: '1'};
+var lastFilter = ["atm", [['Normal', 1],['Light rain', 2],['Heavy rain', 3],['Snow - hail', 4]
+    ,['Fog - smoke', 5],['Strong wind - storm', 6],['Dazzling weather', 7],['Cloudy weather', 8],['Other', 9]]];
 
 async function init() {
     
@@ -116,10 +118,28 @@ function setClickListeners() {
 
 function prepareQuery() {
     //gr.updateGraph([queryDict]);
+    console.log(queryDict);
     pie.updatePie([queryDict]);
     
 
     queryGraphData.queryList([{}]);
+}
+
+export function updateToFixed(sCase) {
+    if (sCase == 1) {
+        queryDict = {};
+    }
+    if (sCase == 2) {
+        queryDict = {"lum": new Set([1,2,4]), "atm": new Set([1,2,3])};
+    }
+    if (sCase == 3) {
+        queryDict = [{}];
+    }
+
+    console.log(lastFilter);
+    pie.updatePie([queryDict]);
+    filterGraph.updateFiltergraph(lastFilter, queryDict);
+
 }
 
 
@@ -149,8 +169,10 @@ export function toggleDropdown(dropdownId) {
 
     filter.push(ids);
 
-    // console.log(openDropdown.style.display);
-    
+    lastFilter = filter;
+    console.log(filter);
+    console.log(queryDict);
+ 
     if (openDropdown.style.display === "block") {
         filterGraph.updateFiltergraph(filter, queryDict);
     }

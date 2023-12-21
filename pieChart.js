@@ -24,7 +24,7 @@ export default class PieChart {
         this.arcTween = this.arcTween.bind(this);
         
 
-        this.transDict = {"1": "Unscathed", "2": "Killed", "3": "Hospitalized wounded", "4": "Light injury"}
+        this.transDict = {"1": ["Unscathed", 0], "2": ["Killed", 3], "3": ["Hospitalized wounded", 2], "4": ["Light injury", 1]}
         this.margin = {top: 30, right: 10, bottom: 30, left: 30};
         window.pie = this
         this.setupPie();
@@ -33,9 +33,13 @@ export default class PieChart {
     async setupPie() {
         const data = await this.getData([{}]);
 
+
+
         this.sumCount = data.reduce((sum, element) => {
             return sum + element.value;
           },0);
+
+        
 
 
         // Select the div and append an svg element to it
@@ -59,7 +63,7 @@ export default class PieChart {
             .attr("d", this.arc)
             .style("fill", function(d, i) {
                 // Color the segments
-                var colors = ["#66c2a5", "#41ae76", "#238b45", "#005824"];
+                var colors = ['#b2df8a','#33a02c', '#a6cee3','#1f78b4'];
                 return colors[i];
             })
             .on("mouseover",  handleMouseOver)
@@ -80,7 +84,7 @@ export default class PieChart {
             .attr("width", 18)
             .attr("height", 18)
             .style("fill", function(d, i) { 
-                var colors = ["#66c2a5", "#41ae76", "#238b45", "#005824"];
+                var colors = ['#b2df8a','#33a02c', '#a6cee3','#1f78b4'];
                 return colors[i % colors.length];
             })
             .on("mouseover",  handleMouseOverLegend)
@@ -97,6 +101,16 @@ export default class PieChart {
             .style("visibility", "visible")
             .style("font-size", "10px")
             .text(function(d) { return d.label; });
+
+        // Add a text above the legend
+        this.svg.append("text")
+            .attr("class", "count")
+            .attr("x", this.width / 2 - 50) // Adjust these values as needed
+            .attr("y", -55) // Adjust these values as needed
+            .style("text-anchor", "start")
+            .style("fill", "black")
+            .style("font-size", "10px")
+            .text(`Total occurences: ${this.sumCount}`);
 
 
         // Tooltip container
@@ -180,6 +194,9 @@ export default class PieChart {
         }
 
         document.getElementById("totalSum").innerText = this.sumCount;
+        // var countText = document.getElementById("counter");
+        // countText.textContent = `Total ocurrences: ${this.sumCount}`;
+
 
     }
 
@@ -201,18 +218,10 @@ export default class PieChart {
             .data(data);
 
         document.getElementById("totalSum").innerText = this.sumCount;
-        // // Add a class to the pie chart g elements
-        // var enter = g.enter()
-        //     .append("g")
-        //     .attr("class", "pie");
-        // enter.append("path")
-        //     .attr("d", this.arc)
-        //     .style("fill", function(d, i) {
-        //         var colors = ["#66c2a5", "#41ae76", "#238b45", "#005824"];
-        //         return colors[i];
-        //     });
-       
-        // Handle the update selection
+
+        this.svg.select(".count")
+            .text(`Total occurences: ${this.sumCount}`);
+        
         g.select("path")
             .transition()
             .duration(1000)
@@ -237,14 +246,18 @@ export default class PieChart {
 
     async getData(queryDict) {
         var data = [];
+
         const [grav, what] = this.query.queryList(queryDict);
         for (let key in grav[1]) {
           
             let value = {};
-            value["label"] = this.transDict[key];
+            value["label"] = this.transDict[key][0];
             value["value"] = grav[1][key];
-            data.push(value);
+            // data.push(value);
+            data[this.transDict[key][1]]=  value;
+            console.log(value);
         }
+        console.log(data);
         return data;
     }
 

@@ -17,7 +17,7 @@ export default class StackGraph {
         window.stack = this;
     }
 
-    async setupGraph() {
+    async setupGraph(preSampled) {
         this.width -= this.margin.left - this.margin.right,
         this.height -= this.margin.top - this.margin.bottom;
 
@@ -29,7 +29,7 @@ export default class StackGraph {
             .attr("transform",
                 "translate(" + this.margin.left + "," + this.margin.top + ")");
 
-        const data = await this.getFilterStats(["lum", [['Normal', 1],['Light rain', 2]
+        const data = await this.getFilterStats(["atm", [['Normal', 1],['Light rain', 2]
             ,['Heavy rain', 3]
             ,['Snow - hail', 4]
             ,['Fog - smoke', 5]
@@ -49,7 +49,7 @@ export default class StackGraph {
             .range([this.height, 0]);
     
         var z = d3.scaleOrdinal()
-            .range(["#66c2a5", "#41ae76"]);
+            .range(["#66c2a5", "#8da0cb"]);
     
         var stack = d3.stack()
             .keys(["heavy", "light"])
@@ -203,7 +203,7 @@ export default class StackGraph {
             .range([this.height, 0]);
     
         var z = d3.scaleOrdinal()
-            .range(["#66c2a5", "#41ae76"]);
+            .range([["#66c2a5", "#8da0cb"]]);
     
         var stack = d3.stack()
             .keys(["heavy", "light"])
@@ -368,6 +368,7 @@ export default class StackGraph {
     
 
     async getData(queryDict) {
+        console.log(queryDict);
         var data = [];
         var max = 0;
         const [grav, what] = this.query.queryList(queryDict);
