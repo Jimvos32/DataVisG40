@@ -8,11 +8,13 @@ export default class StackGraph {
         this.svg = null;
         this.width = window.innerWidth * 0.3;
         this.height = window.innerHeight * 0.2;
-    
-
-        this.transDict = {"1": "Unscathed", "2": "Killed", "3": "Hospitalized wounded", "4": "Light injury"}
+        this.currentFilter = "";
+        this.queryDict;
+        this.transDict = {"1": "Unscathed", "2": "Killed", "3": "Hospitalized wounded", "4": "Light injury"};
+        this.ignore = new Set();
         this.margin = {top: 30, right: 30, bottom: 120, left: 60};
         this.setupGraph();
+        window.stack = this;
     }
 
     async setupGraph() {
@@ -165,10 +167,30 @@ export default class StackGraph {
                 .style("left", (d.clientX + 10) + "px")
                 .style("top", (d.clientY - 40) + "px");
         }
+
+
+
+        // function updateScales() {
+
+        //     //yScale.domain([0, d3.max(data, d => d3.max(d.values, v => v[1]))]);
+        //     yScale.domain([0, d3.max(data, function(d) { return d.total - 1780000; })])
+
+        //     svg.select(".y-axis")
+        //     .transition()
+        //     .duration(1000)
+        //     .call(d3.axisLeft(yScale));
+        // }
         
     }
 
-    async updateFiltergraph(filter, queryDict) {
+    async updateFiltergraph(filter, queryDict, persist = false) {
+        console.log(filter)
+        if(!persist){
+            this.ignore.clear();
+            this.currentFilter = filter;
+            this.queryDict = queryDict;
+            console.log("cleared")
+        }
         const data = await this.getFilterStats(filter, queryDict);
     
         var xScale = d3.scaleBand()
@@ -322,6 +344,23 @@ export default class StackGraph {
                 .style("left", (d.clientX + 10) + "px")
                 .style("top", (d.clientY - 40) + "px");
         }
+
+        // Add click event for x-axis labels
+        const xAxisLabels = d3.selectAll('.x-axis .tick text');
+
+        xAxisLabels.on('click', function(event, d) {
+            const category = d;
+            console.log(this);
+            //toggleBarVisibility(category);
+            window.stack.ignore.add(d);
+            console.log(window.stack.ignore);
+            var filter = window.stack.currentFilter
+            //filter.add(filter)
+            //filter.push(filter)
+            console.log(queryDict)
+            console.log(filter)
+            window.stack.updateFiltergraph(window.stack.currentFilter, window.stack.queryDict, true);
+        });
     }
     
     
@@ -379,6 +418,5 @@ export default class StackGraph {
         return data;
 
     }
-
 
 }
