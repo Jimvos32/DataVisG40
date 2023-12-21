@@ -20,7 +20,8 @@ var lastFilter = ["atm", [['Normal', 1],['Light rain', 2],['Heavy rain', 3],['Sn
 
 async function init() {
     
-    await queryGraphData.getAllData('Data/scaled_14_15.csv');
+    await queryGraphData.getAllData('Data/scaled_5432.csv');
+    // await queryGraphData.getAllData('Data/scaled_14_15.csv');
     // await queryGraphData.getAllData('Data/scaled_collection.csv');
     console.log("finished loading data");
     setClickListeners();
@@ -128,13 +129,17 @@ function prepareQuery() {
 export function updateToFixed(sCase) {
     var guideDict
     if (sCase == 1) {
-        guideDict = {};
+        guideDict = {"atm": new Set([2]), "lum": new Set([3]), "secu": new Set([12])};
     }
     if (sCase == 2) {
-        guideDict = {"lum": new Set([1,2,4]), "atm": new Set([1,2,3])};
+        guideDict = {"atm": new Set([1]), "col": new Set([2, 4]), "lum": new Set([1]), "catr": new Set([4]), "catu": new Set([1, 2]), "secu": new Set([11])};
     }
     if (sCase == 3) {
-        guideDict = [{}];
+        guideDict = {"lum": new Set([3]), "catr": new Set([1]), "catu": new Set([3])};
+    }
+    //Reset Button
+    if (sCase == 0) {
+        guideDict = {};
     }
     queryDict = guideDict
     

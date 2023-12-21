@@ -12,7 +12,7 @@ export default class StackGraph {
         this.queryDict = new Object();
         this.transDict = {"1": "Unscathed", "2": "Killed", "3": "Hospitalized wounded", "4": "Light injury"};
         this.ignore = new Set();
-        this.margin = {top: 0, right: 0, bottom: 90, left: 60};
+        this.margin = {top: 5, right: 0, bottom: 90, left: 60};
         this.setupGraph();
         window.stack = this;
     }
@@ -49,10 +49,10 @@ export default class StackGraph {
             .range([this.height, 0]);
     
         var z = d3.scaleOrdinal()
-            .range(["#66c2a5", "#8da0cb"]);
+            .range(["#8da0cb", "#66c2a5"]);
     
         var stack = d3.stack()
-            .keys(["heavy", "light"])
+            .keys(["Severe or fatal injury", "Light or no injury"])
             .order(d3.stackOrderNone)
             .offset(d3.stackOffsetNone);
 
@@ -236,10 +236,10 @@ export default class StackGraph {
             .range([this.height, 0]);
     
         var z = d3.scaleOrdinal()
-            .range([["#66c2a5", "#8da0cb"]]);
+            .range([["#8da0cb", "#66c2a5"]]);
     
         var stack = d3.stack()
-            .keys(["heavy", "light"])
+            .keys(["Severe or fatal injury", "Light or no injury"])
             .order(d3.stackOrderNone)
             .offset(d3.stackOffsetNone);
     
@@ -452,12 +452,12 @@ export default class StackGraph {
             var add = {};
             add["category"] = list[i][0];
             if(persist && this.ignore.has(list[i][0])){
-                add["heavy"] = 0;
-                add["light"] = 0;
+                add["Severe or fatal injury"] = 0;
+                add["Light or no injury"] = 0;
                 add["total"] = 0;//res[i][0];
             } else {
-                add["heavy"] = res[i][1][2] + res[i][1][3];
-                add["light"] = res[i][1][1] + res[i][1][4];
+                add["Severe or fatal injury"] = res[i][1][2] + res[i][1][3];
+                add["Light or no injury"] = res[i][1][1] + res[i][1][4];
                 add["total"] = res[i][0];
             }
             
