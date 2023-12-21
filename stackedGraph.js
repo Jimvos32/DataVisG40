@@ -7,17 +7,17 @@ export default class StackGraph {
         this.id = id;
         this.svg = null;
         this.width = window.innerWidth * 0.3;
-        this.height = window.innerHeight * 0.2;
+        this.height = window.innerHeight * 0.11;
         this.currentFilter = "";
         this.queryDict = new Object();
         this.transDict = {"1": "Unscathed", "2": "Killed", "3": "Hospitalized wounded", "4": "Light injury"};
         this.ignore = new Set();
-        this.margin = {top: 30, right: 30, bottom: 120, left: 60};
+        this.margin = {top: 0, right: 0, bottom: 90, left: 60};
         this.setupGraph();
         window.stack = this;
     }
 
-    async setupGraph(preSampled) {
+    async setupGraph() {
         this.width -= this.margin.left - this.margin.right,
         this.height -= this.margin.top - this.margin.bottom;
 
@@ -40,7 +40,7 @@ export default class StackGraph {
 
     
         var xScale = d3.scaleBand()
-            .range([0, 48 * data.length])
+            .range([0, 42 * data.length])
             .domain(data.map(function(d) { return d.category; }))
             .padding(0.2);
     
@@ -82,7 +82,7 @@ export default class StackGraph {
            .duration(1000)
            .call(d3.axisBottom(xScale))
            .selectAll("text")
-           .attr("transform", "translate(-10,0)rotate(-45)")
+           .attr("transform", "translate(-10,0)rotate(-25)")
            .style("text-anchor", "end")
            .style("fill", "blue");
 
@@ -227,7 +227,7 @@ export default class StackGraph {
         const data = await this.getFilterStats(filter, queryDict, persist);
     
         var xScale = d3.scaleBand()
-            .range([0, 48 * data.length])
+            .range([0, 42 * data.length])
             .domain(data.map(function (d) { return d.category; }))
             .padding(0.2);
     
@@ -308,12 +308,11 @@ export default class StackGraph {
                 .attr("class", "x-axis");
         }
     
-        // Update the x-axis
         xAxisGroup.transition()
             .duration(1000)
             .call(d3.axisBottom(xScale))
             .selectAll("text")
-            .attr("transform", "translate(-10,0)rotate(-45)")
+            .attr("transform", "translate(-10,0)rotate(-25)")
             .style("text-anchor", "end")
             .style("fill", d => {
                 // Check the 'ignored' property to determine if the label should be grey

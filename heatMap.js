@@ -41,7 +41,7 @@ export default class HeatMap {
         const labelsX = ['Normal', 'Light rain', 'Heavy rain', 'Snow - hail', 'Fog - smoke', 'Strong wind - storm', 'Dazzling weather', 'Cloudy weather', 'Other']
         const labelsY = ['Out of intersection', 'Intersection in X', 'Intersection in T', 'Intersection in Y', 'Intersection with more than 4 branches ', 'Giratory', 'Place', 'Level crossing', 'Other intersection'];
 
-        const min = 0;
+        const min = d3.min(data.flat(), d => (d > 0 ? d : Infinity));
         const max = 0.24;
 
         // const [data, min, max] = await this.getData(queryDict, mode, labelsX.length, labelsY.length);
@@ -59,7 +59,7 @@ export default class HeatMap {
         // Create the scales
         const xScale = d3.scaleBand().range([0, width]).domain(labelsX).padding(0.05);
         const yScale = d3.scaleBand().range([height, 0]).domain(labelsY).padding(0.05);
-        const colorScale = d3.scaleSequential()
+        const colorScale = d3.scaleSequentialLog()
             .domain([min, max])
             .interpolator(d3.interpolateInferno);
         // Add the squares
@@ -82,7 +82,7 @@ export default class HeatMap {
         .attr("transform", "translate(0," + height + ")")
         .call(d3.axisBottom(xScale))
         .selectAll("text")
-            .attr("transform", "rotate(-45)")
+            .attr("transform", "rotate(-30)")
             .style("text-anchor", "end")
             .attr("dx", "-1em");
 
@@ -188,10 +188,14 @@ export default class HeatMap {
 
         // Wait for the changes to be visible
         await new Promise(resolve => setTimeout(resolve, 0));
+
         let same = labelsX.every((val, index) => val === labelsY[index]);
         const [data, min, max] =  await this.getData(queryDict, mode, labelsX.length, labelsY.length, same);
-        console.log(labelsX)
-        console.log(labelsY)
+
+        // Check if min is 0 and adjust it
+        const adjustedMin = min === 0 ? 0.0001 : min;
+        
+
         // Clear the existing heatmap
         this.svg.selectAll("*").remove();
     
@@ -203,8 +207,8 @@ export default class HeatMap {
         // Create the scales
         const xScale = d3.scaleBand().range([0, width]).domain(labelsX).padding(0.05);
         const yScale = d3.scaleBand().range([height, 0]).domain(labelsY).padding(0.05);
-        const colorScale = d3.scaleSequential()
-            .domain([min, max])
+        const colorScale = d3.scaleSequentialLog()
+            .domain([adjustedMin, max])
             .interpolator(d3.interpolateInferno);
         // Add the squares
         this.svg.selectAll()
@@ -225,7 +229,7 @@ export default class HeatMap {
         .attr("transform", "translate(0," + height + ")")
         .call(d3.axisBottom(xScale))
         .selectAll("text")
-            .attr("transform", "rotate(-45)")
+            .attr("transform", "rotate(-30)")
             .style("text-anchor", "end");
 
         this.svg.append("g").call(d3.axisLeft(yScale));
