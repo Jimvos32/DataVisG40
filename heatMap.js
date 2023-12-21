@@ -188,10 +188,10 @@ export default class HeatMap {
 
         // Wait for the changes to be visible
         await new Promise(resolve => setTimeout(resolve, 0));
-
-        const [data, min, max] = await this.getData(queryDict, mode, labelsX.length, labelsY.length);
-
-      
+        let same = labelsX.every((val, index) => val === labelsY[index]);
+        const [data, min, max] =  await this.getData(queryDict, mode, labelsX.length, labelsY.length, same);
+        console.log(labelsX)
+        console.log(labelsY)
         // Clear the existing heatmap
         this.svg.selectAll("*").remove();
     
@@ -337,10 +337,10 @@ export default class HeatMap {
     
     
 
-    async getData(queryDict, mode, x, y) {
+    async getData(queryDict, mode, x, y, same=false) {
         var res = [];
         const results = this.query.queryList(queryDict);
-      
+        console.log(same)
         let min = 0;
         let max = 0;
 
@@ -357,6 +357,16 @@ export default class HeatMap {
             max = Math.max(...transformedData);
             for (let i = 0; i < y; i++) {
                 res[i] = transformedData.slice(i * x, (i + 1) * x);
+            }
+        }
+
+        if (same) {
+            for(let i=0; i<x; i++) {
+                for(let j=0; j<x; j++) {
+                    if(i != j) {
+                        res[i][j] = 0;
+                    }
+                }
             }
         }
         return [res, min, max];

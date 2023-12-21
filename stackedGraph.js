@@ -9,7 +9,7 @@ export default class StackGraph {
         this.width = window.innerWidth * 0.3;
         this.height = window.innerHeight * 0.2;
         this.currentFilter = "";
-        this.queryDict;
+        this.queryDict = new Object();
         this.transDict = {"1": "Unscathed", "2": "Killed", "3": "Hospitalized wounded", "4": "Light injury"};
         this.ignore = new Set();
         this.margin = {top: 30, right: 30, bottom: 120, left: 60};
@@ -83,7 +83,8 @@ export default class StackGraph {
            .call(d3.axisBottom(xScale))
            .selectAll("text")
            .attr("transform", "translate(-10,0)rotate(-45)")
-           .style("text-anchor", "end");
+           .style("text-anchor", "end")
+           .style("fill", "blue");
 
         // Bind the new data to the bars
         var bars = this.svg.selectAll("g.bar-group")
@@ -182,26 +183,41 @@ export default class StackGraph {
         // }
 
         // Add click event for x-axis labels
-        // const xAxisLabels = d3.selectAll('.x-axis .tick text');
+        var filter = ["atm", [['Normal', 1],['Light rain', 2]
+        ,['Heavy rain', 3]
+        ,['Snow - hail', 4]
+        ,['Fog - smoke', 5]
+        ,['Strong wind - storm', 6]
+        ,['Dazzling weather', 7]
+        ,['Cloudy weather', 8]
+        ,['Other', 9]]]
 
-        // xAxisLabels.on('click', function(event, d) {
-        //     const category = d;
-        //     console.log(this);
-        //     //toggleBarVisibility(category);
-        //     window.stack.ignore.add(d);
-        //     console.log(window.stack.ignore);
-        //     var filter = window.stack.currentFilter
-        //     //filter.add(filter)
-        //     //filter.push(filter)
-        //     // console.log(queryDict)
-        //     // console.log(filter)
-        //     window.stack.updateFiltergraph(window.stack.currentFilter, window.stack.queryDict, true);
-        // });
+        const xAxisLabels = d3.selectAll('.x-axis .tick text');
+        this.currentFilter = filter;
+        var queryDict = this.queryDict;
+
+        xAxisLabels.on('click', function(event, d) {
+            const category = d;
+            console.log(this);
+            if(window.stack.ignore.has(d)) {
+                window.stack.ignore.delete(d);
+                console.log("removing")
+
+            } else {
+                window.stack.ignore.add(d);
+
+            }
+
+            window.stack.updateFiltergraph(filter, queryDict, true);
+        });
+
         
     }
 
     async updateFiltergraph(filter, queryDict, persist = false) {
+        console.log("test")
         console.log(filter)
+        console.log(queryDict)
         if(!persist){
             this.ignore.clear();
             this.currentFilter = filter;
@@ -301,7 +317,7 @@ export default class StackGraph {
             .style("text-anchor", "end")
             .style("fill", d => {
                 // Check the 'ignored' property to determine if the label should be grey
-                return this.ignore.has(d) ? "grey" : "black";
+                return this.ignore.has(d) ? "grey" : "blue";
             })
             .style("text-decoration", d => {
                 // Add strikethrough effect if the 'ignored' property is true
