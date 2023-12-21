@@ -119,7 +119,8 @@ async function main() {
   
     const monsterTable = joinAll(joinedTable, joinedTable2);
 
-    const filteredTable = monsterTable.filter(row => row['"an"'] == "15" || row['"an"'] == "14");
+    // const filteredTable = monsterTable.filter(row => row['"an"'] == "15" || row['"an"'] == "14" );
+    const filteredTable = monsterTable.filter(row => row['"grav"'] == "1" || row['"grav"'] == "2" || row['"grav"'] == "3" || row['"grav"'] == "4");
 
     const keysToKeep = ['"atm"', '"int"', '"col"', '"lum"', '"catr"', '"surf"', '"grav"', '"catv"', '"catu"', '"secu"'];
 
@@ -145,17 +146,17 @@ async function main() {
     // const csvA = objectToCsv(joinedTable);
     // const csvB = objectToCsv(joinedTable2);
 
-    // Write data to CSV file
-    fs.writeFile('scaled_14_15.csv', csvData, (err) => {
-      if (err) throw err;
-      console.log('The file has been saved!');
-    });
-
     // // Write data to CSV file
-    // fs.writeFile('collection_table.csv', csvData, (err) => {
+    // fs.writeFile('scaled_14_15.csv', csvData, (err) => {
     //   if (err) throw err;
     //   console.log('The file has been saved!');
     // });
+
+    // Write data to CSV file
+    fs.writeFile('collection_table.csv', csvData, (err) => {
+      if (err) throw err;
+      console.log('The file has been saved!');
+    });
 
     // // Write data to CSV file
     // fs.writeFile('user_vehicle_table.csv', csvA, (err) => {

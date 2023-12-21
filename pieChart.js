@@ -9,8 +9,8 @@ export default class PieChart {
         this.sumCount = 0;
         this.tooltip = null;
         this.g = null;
-        this.width = window.innerWidth * 0.25;
-        this.height = window.innerHeight * 0.25;
+        this.width = window.innerWidth * 0.23;
+        this.height = window.innerHeight * 0.23;
         this.lengend = null;
         this.pie = d3.pie().sort(null).value(function(d) { return d.value; });
 
@@ -25,7 +25,7 @@ export default class PieChart {
         
 
         this.transDict = {"1": ["Unscathed", 0], "2": ["Killed", 3], "3": ["Hospitalized wounded", 2], "4": ["Light injury", 1]}
-        this.margin = {top: 30, right: 10, bottom: 30, left: 30};
+        this.margin = {top: 30, right: 10, bottom: 0, left: 30};
         window.pie = this
         this.setupPie();
     }
@@ -102,17 +102,7 @@ export default class PieChart {
             .style("font-size", "10px")
             .text(function(d) { return d.label; });
 
-        // Add a text above the legend
-        this.svg.append("text")
-            .attr("class", "count")
-            .attr("x", this.width / 2 - 50) // Adjust these values as needed
-            .attr("y", -55) // Adjust these values as needed
-            .style("text-anchor", "start")
-            .style("fill", "black")
-            .style("font-size", "10px")
-            .text(`Total occurences: ${this.sumCount}`);
-
-
+    
         // Tooltip container
         this.tooltip = d3.select("body")
         .append("div")
@@ -248,8 +238,10 @@ export default class PieChart {
         var data = [];
 
         const [grav, what] = this.query.queryList(queryDict);
+        console.log(grav)
         for (let key in grav[1]) {
-          
+            console.log(grav[1])
+            console.log(grav[1])
             let value = {};
             value["label"] = this.transDict[key][0];
             value["value"] = grav[1][key];
