@@ -21,6 +21,7 @@ var lastFilter = ["atm", [['Normal', 1],['Light rain', 2],['Heavy rain', 3],['Sn
 async function init() {
     
     await queryGraphData.getAllData('Data/scaled_5432.csv');
+    // await queryGraphData.getAllData('Data/scaled_14_15.csv');
     // await queryGraphData.getAllData('Data/scaled_collection.csv');
     console.log("finished loading data");
     setClickListeners();
@@ -126,17 +127,53 @@ function prepareQuery() {
 }
 
 export function updateToFixed(sCase) {
+    var guideDict
     if (sCase == 1) {
-        queryDict = {};
+        guideDict = {"atm": new Set([2]), "lum": new Set([3]), "secu": new Set([12])};
     }
     if (sCase == 2) {
-        queryDict = {"lum": new Set([1,2,4]), "atm": new Set([1,2,3])};
+        guideDict = {"atm": new Set([1]), "col": new Set([2, 4]), "lum": new Set([1]), "catr": new Set([4]), "catu": new Set([1, 2]), "secu": new Set([11])};
     }
     if (sCase == 3) {
-        queryDict = [{}];
+        guideDict = {"lum": new Set([3]), "catr": new Set([1]), "catu": new Set([3])};
     }
+    //Reset Button
+    if (sCase == 0) {
+        guideDict = {};
+    }
+    queryDict = guideDict
+    
+    var dropdowns = document.querySelectorAll('.dropdown-content');
+    dropdowns.forEach(function(dropdown) {
+        var checkboxes = dropdown.querySelectorAll('input[type="checkbox"]');
+        //console.log(dropdown);
+        checkboxes.forEach(function(checkbox) {
 
-    console.log(lastFilter);
+            if(guideDict[dropdown.id]  && guideDict[dropdown.id].has(parseInt(checkbox.value))) {
+                checkbox.checked = true;
+            } else {
+                checkbox.checked = false;
+            }
+            var selected = queryDict[dropdown.id];
+            var dropdownText = document.querySelector('.dropdown-btn[data-dropdown='+ dropdown.id +']');
+            if(!defaultStrings[dropdown.id]) {
+                defaultStrings[dropdown.id] = dropdownText.textContent;
+            }
+            if(!selected) {
+                dropdownText.textContent = defaultStrings[dropdown.id];
+            } else {
+                var strings = [];
+                for (let val of selected) {
+                    var element = document.querySelector('#' + dropdown.id + ' input[value="' + val + '"]').parentNode;
+                    strings.push(" " + element.textContent);
+                }
+                
+                dropdownText.textContent = strings;
+            }
+        })
+    })
+
+    //console.log(lastFilter);
     pie.updatePie([queryDict]);
     filterGraph.updateFiltergraph(lastFilter, queryDict);
 
@@ -173,9 +210,10 @@ export function toggleDropdown(dropdownId) {
     console.log(filter);
     console.log(queryDict);
  
-    if (openDropdown.style.display === "block") {
+    if (openDropdown.style.display === "block" && filterGraph.currentFilter[0] != dropdownId) {
         filterGraph.updateFiltergraph(filter, queryDict);
     }
+
 }
 
 window.onclick = function(event) {
