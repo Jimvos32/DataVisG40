@@ -20,7 +20,7 @@ var lastFilter = ["atm", [['Normal', 1],['Light rain', 2],['Heavy rain', 3],['Sn
 
 async function init() {
     
-    await queryGraphData.getAllData('Data/scaled_14_15.csv');
+    await queryGraphData.getAllData('Data/scaled_5432.csv');
     // await queryGraphData.getAllData('Data/scaled_collection.csv');
     console.log("finished loading data");
     setClickListeners();
