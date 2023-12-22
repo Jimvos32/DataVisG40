@@ -29,16 +29,18 @@ export default class StackGraph {
             .attr("transform",
                 "translate(" + this.margin.left + "," + this.margin.top + ")");
 
-        const data = await this.getFilterStats(["atm", [['Normal', 1],['Light rain', 2]
+        //Presets to weather data as the starting graph
+        var filter = ["atm", [['Normal', 1],['Light rain', 2]
             ,['Heavy rain', 3]
             ,['Snow - hail', 4]
             ,['Fog - smoke', 5]
             ,['Strong wind - storm', 6]
             ,['Dazzling weather', 7]
             ,['Cloudy weather', 8]
-            ,['Other', 9]], [{}]]);
+            ,['Other', 9]]]
+        const data = await this.getFilterStats(filter);
 
-    
+        //Create scales
         var xScale = d3.scaleBand()
             .range([0, 42 * data.length])
             .domain(data.map(function(d) { return d.category; }))
@@ -56,44 +58,40 @@ export default class StackGraph {
             .order(d3.stackOrderNone)
             .offset(d3.stackOffsetNone);
 
-              // Add Y axis
-        
+
         this.svg.append("g")
             .attr("class", "y-axis")
             .call(d3.axisLeft(yScale));
   
         var series = stack(data);
     
-        // Bind the new data to the bars
+
         var bars = this.svg.selectAll("g.bar-group")
             .data(series);
 
-       // Update or create the x-axis
-       var xAxisGroup = this.svg.select(".x-axis");
+        //Set axis
+        var xAxisGroup = this.svg.select(".x-axis");
 
-       if (xAxisGroup.empty()) {
-           xAxisGroup = this.svg.append("g")
-               .attr("transform", "translate(0," + this.height + ")")
-               .attr("class", "x-axis");
-       }
+        if (xAxisGroup.empty()) {
+            xAxisGroup = this.svg.append("g")
+                .attr("transform", "translate(0," + this.height + ")")
+                .attr("class", "x-axis");
+        }
 
-       // Update the x-axis
-       xAxisGroup.transition()
-           .duration(1000)
-           .call(d3.axisBottom(xScale))
-           .selectAll("text")
-           .attr("transform", "translate(-10,0)rotate(-25)")
-           .style("text-anchor", "end")
-           .style("fill", "blue");
+        xAxisGroup.transition()
+            .duration(1000)
+            .call(d3.axisBottom(xScale))
+            .selectAll("text")
+            .attr("transform", "translate(-10,0)rotate(-25)")
+            .style("text-anchor", "end")
+            .style("fill", "blue");
 
-        // Bind the new data to the bars
+
         var bars = this.svg.selectAll("g.bar-group")
         .data(series);
 
-        // Handle the exit selection
         bars.exit().remove();
-
-        // Handle the enter selection
+        //Add bars
         bars.enter().append("g")
             .attr("class", "bar-group")
             .attr("fill", function(d) { return z(d.key); })
@@ -109,11 +107,7 @@ export default class StackGraph {
             .on("mousemove", handleMouseMove);
 
 
-        // // Tooltip container
-        // this.tooltip = d3.select("body")
-        // .append("div")
-        // .attr("class", "tooltip")
-
+        // Use the same tooltip container as the pie chart
         var tooltip = window.pie.tooltip
         var svg = this.svg
         // Tooltip functions
@@ -125,12 +119,13 @@ export default class StackGraph {
             // Highlight the selected bar
             d3.select(this)
                 .style("opacity", 1)
-                //.attr("fill", "orange"); // Change color on hover
-            // console.log(j)
+
             tooltip.transition()
                 .duration(500)
                 .style("opacity", 0.9)
                 .style("display", 'unset');
+                
+            //Finds the corresponding label to each bar segment
             var sum = 0;
             for (var key in j.data) {
                 if(key == 'category' || key == 'total' || j.data[key] == 0) {
@@ -151,7 +146,6 @@ export default class StackGraph {
             // Restore the opacity of all bars
             svg.selectAll("rect")
                 .style("opacity", 1)
-                //.attr("fill", "#69b3a2"); // Restore original color on mouseout
 
             // Hide tooltip
             tooltip.transition()
@@ -162,46 +156,21 @@ export default class StackGraph {
 
         function handleMouseMove(d) {
             // Display tooltip
-            // console.log(d)
-            var [xpt, ypt] = d3.pointer(d);
             tooltip.html(`${window.tooltipString}`)
                 .style("left", (d.clientX + 10) + "px")
                 .style("top", (d.clientY - 40) + "px");
         }
 
-
-
-        // function updateScales() {
-
-        //     //yScale.domain([0, d3.max(data, d => d3.max(d.values, v => v[1]))]);
-        //     yScale.domain([0, d3.max(data, function(d) { return d.total - 1780000; })])
-
-        //     svg.select(".y-axis")
-        //     .transition()
-        //     .duration(1000)
-        //     .call(d3.axisLeft(yScale));
-        // }
-
-        // Add click event for x-axis labels
-        var filter = ["atm", [['Normal', 1],['Light rain', 2]
-        ,['Heavy rain', 3]
-        ,['Snow - hail', 4]
-        ,['Fog - smoke', 5]
-        ,['Strong wind - storm', 6]
-        ,['Dazzling weather', 7]
-        ,['Cloudy weather', 8]
-        ,['Other', 9]]]
-
+        // Add click event for x-axis labels to hide bars on click
         const xAxisLabels = d3.selectAll('.x-axis .tick text');
+
         this.currentFilter = filter;
         var queryDict = this.queryDict;
-
         xAxisLabels.on('click', function(event, d) {
             const category = d;
-            console.log(this);
             if(window.stack.ignore.has(d)) {
                 window.stack.ignore.delete(d);
-                console.log("removing")
+
 
             } else {
                 window.stack.ignore.add(d);
@@ -214,18 +183,17 @@ export default class StackGraph {
         
     }
 
+    //This function is called when the barchart is updated
+    //QueryDict is a dictionary of all the filters. Persist determines if the ignore list should persist or should be reset.
     async updateFiltergraph(filter, queryDict, persist = false) {
-        console.log("test")
-        console.log(filter)
-        console.log(queryDict)
         if(!persist){
             this.ignore.clear();
             this.currentFilter = filter;
             this.queryDict = queryDict;
-            console.log("cleared")
+
         }
         const data = await this.getFilterStats(filter, queryDict, persist);
-    
+        //Create scales
         var xScale = d3.scaleBand()
             .range([0, 42 * data.length])
             .domain(data.map(function (d) { return d.category; }))
@@ -245,31 +213,27 @@ export default class StackGraph {
     
         var series = stack(data);
     
-        // Bind the new data to the bars
         var bars = this.svg.selectAll("g.bar-group")
             .data(series, function (d) { return d.key; });
     
-        // Handle the exit selection for groups
         bars.exit().remove();
     
         bars.transition()
         .duration(1000)
         .attr("transform", function (d) {
-            return "translate(0,0)"; // Change this line
+            return "translate(0,0)";
         });
 
-        // Handle the enter selection for groups
         var newGroups = bars.enter().append("g")
         .attr("class", "bar-group")
         .attr("transform", function (d) {
-            return "translate(0,0)"; // And this line
+            return "translate(0,0)";
         });
             
     
         // Merge the new groups with the update selection
         bars = newGroups.merge(bars);
     
-        // Handle the update selection for rectangles
         bars.selectAll("rect")
             .data(function (d) { return d; })
             .transition()
@@ -279,12 +243,12 @@ export default class StackGraph {
             .attr("height", function (d) { return yScale(d[0]) - yScale(d[1]); })
             .attr("width", xScale.bandwidth());
     
-        // Handle the exit selection for rectangles
+
         bars.selectAll("rect")
             .data(function (d) { return d; })
             .exit().remove();
     
-        // Handle the enter selection for rectangles
+
         bars.selectAll("rect")
             .data(function (d) { return d; })
             .enter().append("rect")
@@ -298,8 +262,7 @@ export default class StackGraph {
             .on("mouseover",  handleMouseOver)
             .on("mouseout", handleMouseOut)
             .on("mousemove", handleMouseMove);
-    
-        // Update or create the x-axis
+        //Set axis
         var xAxisGroup = this.svg.select(".x-axis");
     
         if (xAxisGroup.empty()) {
@@ -315,15 +278,15 @@ export default class StackGraph {
             .attr("transform", "translate(-10,0)rotate(-25)")
             .style("text-anchor", "end")
             .style("fill", d => {
-                // Check the 'ignored' property to determine if the label should be grey
+                // If bar is hidden, label grey, otherwise blue
                 return this.ignore.has(d) ? "grey" : "blue";
             })
             .style("text-decoration", d => {
-                // Add strikethrough effect if the 'ignored' property is true
+                // Add strikethrough effect when bar is hidden
                 return this.ignore.has(d) ? "line-through" : "none";
             });
     
-        // Update the y-axis
+
         this.svg.select(".y-axis")
             .transition()
             .duration(1000)
@@ -341,8 +304,7 @@ export default class StackGraph {
             // Highlight the selected bar
             d3.select(this)
                 .style("opacity", 1)
-                //.attr("fill", "orange"); // Change color on hover
-            // console.log(j)
+
             tooltip.transition()
                 .duration(500)
                 .style("opacity", 0.9)
@@ -367,7 +329,6 @@ export default class StackGraph {
             // Restore the opacity of all bars
             svg.selectAll("rect")
                 .style("opacity", 1)
-                //.attr("fill", "#69b3a2"); // Restore original color on mouseout
 
             // Hide tooltip
             tooltip.transition()
@@ -378,58 +339,30 @@ export default class StackGraph {
 
         function handleMouseMove(d) {
             // Display tooltip
-            // console.log(d)
-            var [xpt, ypt] = d3.pointer(d);
             tooltip.html(`${window.tooltipString}`)
                 .style("left", (d.clientX + 10) + "px")
                 .style("top", (d.clientY - 40) + "px");
         }
 
-        // Add click event for x-axis labels
+        // Add click event for x-axis labels to hide bars on click
         const xAxisLabels = d3.selectAll('.x-axis .tick text');
 
         xAxisLabels.on('click', function(event, d) {
             const category = d;
-            console.log(this);
+
             if(window.stack.ignore.has(d)) {
                 window.stack.ignore.delete(d);
-                console.log("removing")
-                //toggleBarVisibility(category);
+
             } else {
                 window.stack.ignore.add(d);
-                //toggleBarVisibility(category);
+
             }
-            console.log(window.stack.ignore);
-            //filter.add(filter)
-            //filter.push(filter)
-            // console.log(queryDict)
-            // console.log(filter)
             window.stack.updateFiltergraph(window.stack.currentFilter, window.stack.queryDict, true);
         });
     }
     
-    
-    
-    
 
-    async getData(queryDict) {
-        console.log(queryDict);
-        var data = [];
-        var max = 0;
-        const [grav, what] = this.query.queryList(queryDict);
-        for (let key in grav[1]) {
-          
-            let value = {};
-            value["x"] = this.transDict[key];
-            value["y"] = grav[1][key];
-            if (grav[1][key] > max) {
-                max = grav[1][key];
-            }
-            data.push(value);
-        }
-        return [max, data];
-    }
-
+    //Retrieve the data and parses it into the correct datastructure
     async getFilterStats(filter, queryDict, persist=false) {
         const [str, list] = filter;
 
@@ -444,25 +377,22 @@ export default class StackGraph {
 
         var data =  [];
 
-
-
         const res = this.query.queryList(query);
 
+        //Categorizes severity in (Hospitalised or Fatal) and (Light or Unscathed)
         for (let i = 0; i < res.length; i++) {
             var add = {};
             add["category"] = list[i][0];
+            //If the bar should be hidden, set data to zero
             if(persist && this.ignore.has(list[i][0])){
                 add["Severe or fatal injury"] = 0;
                 add["Light or no injury"] = 0;
-                add["total"] = 0;//res[i][0];
+                add["total"] = 0;
             } else {
                 add["Severe or fatal injury"] = res[i][1][2] + res[i][1][3];
                 add["Light or no injury"] = res[i][1][1] + res[i][1][4];
                 add["total"] = res[i][0];
             }
-            
-            // add["heavy"] = res[i][1][2];
-            // add["light"] = res[i][1][1] + res[i][1][3] + res[i][1][4];
             data.push(add);
         }
 

@@ -54,7 +54,7 @@ function setClickListeners() {
                         queryDict[dropdown.id].delete(parseInt(this.value));
                     }
                 }
-
+                //Updates the selection bar text to include the selected items
                 var selected = queryDict[dropdown.id];
                 var dropdownText = document.querySelector('.dropdown-btn[data-dropdown='+ dropdown.id +']');
                 if(!defaultStrings[dropdown.id]) {
@@ -125,6 +125,7 @@ function setClickListeners() {
 //This function handles the buttons with special cases and reset button
 export function updateToFixed(sCase) {
     var guideDict
+    //Set the dictionary to predefined values based on the button pressed
     if (sCase == 1) {
         guideDict = {"atm": new Set([2]), "lum": new Set([3]), "secu": new Set([12])};
     }
@@ -171,7 +172,7 @@ export function updateToFixed(sCase) {
         })
     })
 
-    //the graphs are updated accordingly
+    //The graphs are updated accordingly
     pie.updatePie([queryDict]);
     filterGraph.updateFiltergraph(lastFilter, queryDict);
 

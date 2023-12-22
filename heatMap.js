@@ -307,7 +307,7 @@ export default class HeatMap {
     async getData(queryDict, mode, x, y, same=false) {
         var res = [];
         const results = this.query.queryList(queryDict);
-        console.log(same)
+
         let min = 0;
         let max = 0;
 
