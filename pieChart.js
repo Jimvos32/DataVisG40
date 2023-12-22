@@ -34,7 +34,7 @@ export default class PieChart {
         const data = await this.getData([{}]);
 
 
-
+        // Calculate the total count
         this.sumCount = data.reduce((sum, element) => {
             return sum + element.value;
           },0);
@@ -42,13 +42,12 @@ export default class PieChart {
         
 
 
-        // Select the div and append an svg element to it
+        // Find corresponding div
         this.svg = d3.select("#" + this.id)
             .append("svg")
                 .attr("width", this.width + this.margin.left + this.margin.right)
                 .attr("height", this.height + this.margin.top + this.margin.bottom)
             .append("g")
-                // Center the pie chart in the svg element
                 .attr("transform", "translate(" + (this.width / 2 + this.margin.left - 100) + "," + (this.height / 2 + this.margin.top) + ")");
 
         // Create a group element for each segment of the pie chart
@@ -58,11 +57,11 @@ export default class PieChart {
             .append("g")
             .attr("class", "pie"); 
 
-        // Create a path element for each segment and set its d attribute
+        // Create a path element for each segment
         this.g.append("path")
             .attr("d", this.arc)
             .style("fill", function(d, i) {
-                // Color the segments
+                // Segment Colors
                 var colors = ['#b2df8a','#33a02c', '#a6cee3','#1f78b4'];
                 return colors[i];
             })
@@ -79,7 +78,7 @@ export default class PieChart {
                 return "translate(" + (this.width / 2 - 50) + "," + (i * 20 - this.height / 2 + 50) + ")";
             }.bind(this));
     
-        // Create a rectangle for the color of each legend item
+        // Create a rectangle for each legend item with corresponding segment colors
         this.legend.append("rect")
             .attr("width", 18)
             .attr("height", 18)
@@ -113,7 +112,7 @@ export default class PieChart {
 
         // Tooltip functions
         function handleMouseOver(d, j) {
-            // Adjust the opacity of all paths
+            // Adjust the opacity of all paths and highlight the corresponding legend
             svg.selectAll("path")
                 .style("opacity", 0.5);
             svg.selectAll("rect")
@@ -122,10 +121,8 @@ export default class PieChart {
             // Highlight the selected paths
             d3.select(this)
                 .style("opacity", 1)
-                .attr("fill", "orange"); // Change color on hover
+                .attr("fill", "orange");
             
-            // console.log(d3.select(this))
-
             tooltip.transition()
                 .duration(500)
                 .style("opacity", 0.9)
@@ -136,19 +133,17 @@ export default class PieChart {
         }
 
         function handleMouseOverLegend(d, j) {
-            // Adjust the opacity of all paths
+            // Adjust the opacity of all legends and highlight the corresponding path
             svg.selectAll("path")
                 .style("opacity", (a) => (a.data.label === j.label) ? 1 : 0.5);
             svg.selectAll("rect")
                 .style("opacity", 0.5);
 
-            // Highlight the selected paths
+            // Highlight the selected legend
             d3.select(this)
                 .style("opacity", 1)
-                .attr("fill", "orange"); // Change color on hover
+                .attr("fill", "orange"); 
             
-            // console.log(d3.select(this))
-
             tooltip.transition()
                 .duration(500)
                 .style("opacity", 0.9)
@@ -158,14 +153,12 @@ export default class PieChart {
         }
 
         function handleMouseOut(d, j) {
-            // Restore the opacity of all paths
+            // Restore the opacity of all paths and legend
             svg.selectAll("path")
                 .style("opacity", 1)
-                .attr("fill", "#69b3a2"); // Restore original color on mouseout
             
             svg.selectAll("rect")
                 .style("opacity", 1)
-                .attr("fill", "#69b3a2");
 
             // Hide tooltip
             tooltip.transition()
@@ -176,31 +169,26 @@ export default class PieChart {
 
         function handleMouseMove(d) {
             // Display tooltip
-            var [xpt, ypt] = d3.pointer(d);
-            // console.log(d);
             tooltip.html(`${window.tooltipString}`)
                 .style("left", (d.clientX + 10) + "px")
                 .style("top", (d.clientY - 40) + "px");
         }
 
         document.getElementById("totalSum").innerText = this.sumCount;
-        // var countText = document.getElementById("counter");
-        // countText.textContent = `Total ocurrences: ${this.sumCount}`;
-
 
     }
-
+    //This function is called when the piechart is updated
+    //QueryDict is a dictionary of all the filters.
     async updatePie(queryDict) {
         const data = await this.getData(queryDict);
 
         this.sumCount = data.reduce((sum, element) => {
             return sum + element.value;
             },0);
-        console.log(this.sumCount);
     
         // Create a new data join with the updated data
         var pie = d3.pie().sort(null).value(function(d) { return d.value; });
-        // Select only the pie chart g elements
+
         var g = this.svg.selectAll(".pie")
             .data(pie(data));
 
@@ -215,41 +203,38 @@ export default class PieChart {
         g.select("path")
             .transition()
             .duration(1000)
-            .attrTween("d", this.arcTween);  // Use the arcTween function for the transition
+            .attrTween("d", this.arcTween);
         g.select("text")
             .attr("transform", function(d) { return "translate(" + labelArc.centroid(d) + ")"; })
             .text(function(d) { 
                 return d.label; });
-
-        // Handle the exit selection
         g.exit().remove();
 
     }
-
+    //Determines the arc
     arcTween(d) {
         var i = d3.interpolate(this._current, d);
         this._current = i(0);
         return function(t) {
-            return this.arc(i(t));  // Use this.arc instead of arc
-        }.bind(this);  // Bind this to the function scope
+            return this.arc(i(t)); 
+        }.bind(this);
     }
 
+    //Retrieve the data and parses it into the correct datastructure
     async getData(queryDict) {
         var data = [];
 
         const [grav, what] = this.query.queryList(queryDict);
-        console.log(grav)
+
         for (let key in grav[1]) {
-            console.log(grav[1])
-            console.log(grav[1])
+
             let value = {};
             value["label"] = this.transDict[key][0];
             value["value"] = grav[1][key];
-            // data.push(value);
             data[this.transDict[key][1]]=  value;
-            console.log(value);
+
         }
-        console.log(data);
+
         return data;
     }
 
