@@ -1,33 +1,37 @@
 <!DOCTYPE html>
 <html>  
 <head>
-    <title>Dropdown Menus for Conditions</title>
     <style>
         body {
             font-family: Arial, sans-serif;
             background-color: #f4f4f4;
             margin: 0;
-            padding: 20px;
         }
 
         h1 {
             text-align: center;
-            color: #333;
+            color: #ffffff;
         }
 
         form {
-            max-width: 500px;
-            margin: 0 auto;
-            background-color: #fff;
+            margin: 0; 
+            background-color: #f9f9f9; 
             padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border-radius: 20px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.2), 0 0 10px rgba(0, 0, 0, 0.1);
+            border: 5px solid #B6BBC4;
+            overflow-y: visible; /* Enable vertical scrolling if content overflows */
         }
+
+
 
         label {
             display: block;
-            margin-bottom: 5px;
+            margin-bottom: 0px;
             color: #333;
+            font-size: 13px;
+            padding-left: 0.5vw; /* Add horizontal padding */
+            padding-right: 0.5vw; /* Add horizontal padding */
         }
 
         select {
@@ -36,8 +40,10 @@
             margin-bottom: 15px;
             border: 1px solid #ccc;
             border-radius: 4px;
-            font-size: 16px;
+            font-size: 13px;
         }
+  
+        
 
         input[type="submit"] {
             margin-top: 20px;
@@ -47,8 +53,10 @@
             border-radius: 4px;
             background-color: #4caf50;
             color: #fff;
-            font-size: 16px;
+            font-size: 13px;
             cursor: pointer;
+            cursor: pointer;
+            transition: background-color 0.3s;
         }
 
         input[type="submit"]:hover {
@@ -58,22 +66,28 @@
         .dropdown {
             position: relative;
             display: inline-block;
+            border-radius: 0.2vw; /* Add border-radius for rounded corners */
+            padding: 0.2vw 0.5vw; /* Add same horizontal padding */
+            margin-bottom: 0.5vw;
         }
 
         .dropdown-btn:hover {
             background-color: rgb(130, 204, 130);
         }
-
         .dropdown-btn {
-            padding: 8px;
-            font-size: 16px;
+            padding: 0.5vw, 1vh;
+            font-size: 13px;
             border: 1px solid #ccc;
             border-radius: 4px;
             background-color: #fff;
             cursor: pointer;
-            width: 400px; /* Set the desired width */
+            width: 15vw; /* Set the desired width */
             box-sizing: border-box; /* Include padding and border in element's total width */
             position: relative;
+        }
+
+        option {
+            font-size: 13px; /* Adjust this value as needed */
         }
 
         .dropdown-btn::after {
@@ -90,46 +104,90 @@
             background-color: #f9f9f9;
             box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
             padding: 10px;
-            max-height: 300px;
+            max-height: 150px;
             overflow-y: auto;
             border: 1px solid #ddd;
             z-index: 1;
-            width: 400px; /* Set the same width as the button */
+            width: 15vw; /* Set the same width as the button */
             box-sizing: border-box; /* Include padding and border in element's total width */
         }
 
         .dropdown-content label {
             display: block;
-            margin-bottom: 1px;
+            margin-bottom: 8px;
         }
 
         .dropdown-content label:hover {
             color: white;
             background-color:#1967D2;
+       }
+
+        #dropdowns {
+            display: flex;
+            gap: 20px; /* Adjust the gap according to your preference */
+        }
+
+        .dropdown2 {
+            flex: 1; /* Distribute available space equally among dropdowns */
+        }
+
+        #chartBox {
+        position: relative; /* Make this a positioning context for its children */
+        }
+
+        #counter {
+            position: absolute; /* Position this element absolutely within #chartBox */
+            top: 50px; /* Adjust this value as needed */
+            left: 54%; /* Adjust this value as needed */
+            font-size: 13px;
+        }
+
+        #pie {
+            position: relative; /* Position this element normally within #chartBox */
+        }
+
+        #textExplain {
+            margin: 3vw;
+        }
+
+        h3 {
+            font-size: 14px; /* Adjust as needed */
+            margin: 8px 0; /* Adjust as needed */
         }
     </style>
 
+    
     <style>
     .container {
         display: flex;
         justify-content: space-between;
+        padding: 0; 
     }
+
+    
 
     .text-box {
         width: 200px; /* adjust as needed */
         background-color: #f8f8f8; /* adjust as needed */
         padding: 10px; /* adjust as needed */
         overflow: auto; /* add a scrollbar if the content is too long */
+        border: 1px solid #ccc; 
+        border-radius: 5px; /* Adjust if needed */
+        margin-right: 20px; 
     }
 
    
     select {
-        width: 200px; /* Adjust as needed */
+        width: 10vw; /* Adjust as needed */
+        padding: 8px;
+        border: 1px solid #ccc;
+        border-radius: p5x;
+        font-size: 0.9vw;
     }
 
     .flex-container {
         display: flex;
-        flex-direction: row;
+        flex-direction: column;
         justify-content: space-between;
         align-items: start;
     }
@@ -146,6 +204,13 @@
         left: 0;
     }
 
+  
+    #testText {
+        font-size: 10px;
+        margin-top: 10vw;
+        margin: 2vw;
+    }
+
     #loading {
         position: absolute;
         top: 50%;
@@ -154,14 +219,15 @@
     }
 
     #content {
+        margin: 2vw;
         display: flex;
         flex-direction: column;
         align-items: center;
     }
 
     .loader {
-        border: 4px solid #f3f3f3; /* Light grey */
-        border-top: 4px solid #3498db; /* Blue */
+        border: 4px solid #f3f3f3; 
+        border-top: 4px solid #3498db; 
         border-radius: 50%;
         width: 20px;
         height: 20px;
@@ -169,13 +235,98 @@
     }
 
     .tooltip {
-    position: fixed;
-    background-color: white;
-    border: 1px solid #ccc;
-    padding: 10px;
-    opacity: 0;
-    pointer-events: none;
+        position: fixed;
+        background-color: white;
+        border: 1px solid #ccc;
+        padding: 10px;
+        opacity: 0;
+        pointer-events: none;
     }
+
+    #caseButtons {
+        margin-top: 1vw;
+        display: flex;
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+
+
+    #filterBox {
+        display: flex;
+        align-items: center;
+        flex-direction: column;
+        justify-content: center;
+        height: 100%; /* Or set to the height you want */
+}
+    #filterBox h2 {
+        text-align: center; /* This will center the h2 title */
+    }
+
+    #contents, #graphs {
+        display: flex;
+        flex-direction: row;
+    }
+
+    #graphs {
+        flex: 1;
+    }
+
+    #contentBack {
+        background-color: #F0ECE5;
+    }
+
+    #contents {
+        padding: 20px;
+    }
+
+    #leftColumn, #rightColumn{
+        background-color: white;
+        margin: 25px;
+        border: #B6BBC4 5px solid;
+        border-radius: 20px;
+    }
+
+    #rightColumn {
+        margin-left: 0;
+    }
+
+    .header{
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 5px;
+        background-color: #161A30;
+    }
+
+    .header-image{
+        width: 6%;
+        height: 60%;
+    }
+
+    #topper{
+        color: white;
+        font-size: 2vw;
+        margin: 0 2vw;
+    }
+
+    button {
+    background-color: #31304D; 
+    border: none; 
+    color: white; 
+    padding: 15px 32px; 
+    text-align: center; 
+    text-decoration: none; 
+    display: inline-block;
+    font-size: 13px;
+    margin: 4px 2px;
+    cursor: pointer; 
+    border-radius: 10px; 
+    }
+
+    button:hover {
+        background-color: #161A30;
+    }
+
 
     @keyframes spin {
         0% { transform: rotate(0deg); }
@@ -189,263 +340,272 @@
 
 <body>
 
-   
-    
     <div id ="container">
 
-        <div id = "plot"></div>
-        <div id = "pie"></div>
-        <div id = "filter"></div>
-
-        
-        <div id="content">
-            <div id = "heatMapBox" class="flex-container">
-                <div id="dropdowns">
-                    <label for="weatherCondition">Filter for x-axis:</label>
-                        <select id="weatherCondition" onchange="handleSelectChange(event, 1)">
-                            <option value="atm">Weather condition</option>
-                            <option value="int">Intersection type</option>
-                            <option value="col">Collision type</option>
-                            <option value="lum">Lighting condition</option>
-                            <option value="catr">Category of road</option>
-                            <option value="surf">Surface condition</option>
-                            <option value="catv">Vehicle type</option>
-                            <option value="catu">Category user</option>
-                            <option value="secu">Security measures</option>
-                        </select>
-
-                    <label for="weatherCondition">Filter for y-axis:</label>
-                        <select id="weatherCondition" onchange="handleSelectChange(event, 2)">
-                            <option value="int">Intersection type</option>
-                            <option value="atm">Weather condition</option>
-                            <option value="col">Collision type</option>
-                            <option value="lum">Lighting condition</option>
-                            <option value="catr">Category of road</option>
-                            <option value="surf">Surface condition</option>
-                            <option value="catv">Vehicle type</option>
-                            <option value="catu">Category user</option>
-                            <option value="secu">Security measures</option>
-                        </select>
-
-                    <label for="weatherCondition">Select metric:</label>
-                        <select id="weatherCondition" onchange="handleSelectChange(event, 3)">
-                            <option value="1">Fatality ratio</option>
-                            <option value="2">Occurrences</option>
-                        </select>
-
-                </div>
-
-                <div id="heatmapContainer" class="heatmap-loading-container">
-            <div id="heatmap"></div>
-            <div id="loading" class="loader"></div>
+        <div class="header" id="top">
+            <img class="header-image" src="Images/crash.png" alt="Description of the image">
+            <h1 id="topper">Accidents in France</h1>
+            <img class="header-image" src="Images/franceFlag.png" alt="Description of the image">
         </div>
 
+        <div id="contentBack">
+
+            <div id="contents">
+                <div id="filterBox">
+
+                    <div id="centeringBox">
+                        <h2 style="text-align: center;">Select conditions</h2>
+
                 
-            </div>
+                        <form>
+                            <label for="weatherCondition">Weather condition:</label>
 
-            
-        <div id="content"></div>
+                            
+                            <div class="dropdown">
 
-        <h1>Select Conditions</h1>
+                                
+                                <div onclick="toggleDropdown('atm')" class="dropdown-btn" data-dropdown="atm">Select weather condition</div>
+                                <div id="atm" class="dropdown-content" onclick="event.stopPropagation()">
+                                    <label><input type="checkbox" value=1>Normal</label>
+                                    <label><input type="checkbox" value=2>Light rain</label>
+                                    <label><input type="checkbox" value=3>Heavy rain</label>
+                                    <label><input type="checkbox" value=4>Snow - hail</label>
+                                    <label><input type="checkbox" value=5>Fog - smoke</label>
+                                    <label><input type="checkbox" value=6>Strong wind - storm</label>
+                                    <label><input type="checkbox" value=7>Dazzling weather</label>
+                                    <label><input type="checkbox" value=8>Cloudy weather</label>
+                                    <label><input type="checkbox" value=9>Other</label>
+                                </div>
+                            </div>
 
-    
-        <form>
-            <label for="weatherCondition">Weather Condition:</label>
+                            <label for="intersectionType">Intersection type:</label>
 
-            
-            <div class="dropdown">
-                <div onclick="toggleDropdown('atm')" class="dropdown-btn" data-dropdown="atm">Select weather condition</div>
-                <div id="atm" class="dropdown-content" onclick="event.stopPropagation()">
-                    <label><input type="checkbox" value=1>Normal</label>
-                    <label><input type="checkbox" value=2>Light rain</label>
-                    <label><input type="checkbox" value=3>Heavy rain</label>
-                    <label><input type="checkbox" value=4>Snow - hail</label>
-                    <label><input type="checkbox" value=5>Fog - smoke</label>
-                    <label><input type="checkbox" value=6>Strong wind - storm</label>
-                    <label><input type="checkbox" value=7>Dazzling weather</label>
-                    <label><input type="checkbox" value=8>Cloudy weather</label>
-                    <label><input type="checkbox" value=9>Other</label>
+                            <div class="dropdown">
+                                <div onclick="toggleDropdown('int')" class="dropdown-btn" data-dropdown="int">Select intersection type</div>
+                                <div id="int" class="dropdown-content" onclick="event.stopPropagation()">
+                                    <label><input type="checkbox" value=1>Out of intersection</label>
+                                    <label><input type="checkbox" value=2>Intersection in X</label>
+                                    <label><input type="checkbox" value=3>Intersection in T</label>
+                                    <label><input type="checkbox" value=4>Intersection in Y</label>
+                                    <label><input type="checkbox" value=5>Intersection with more than 4 branches </label>
+                                    <label><input type="checkbox" value=6>Giratory</label>
+                                    <label><input type="checkbox" value=7>Place</label>
+                                    <label><input type="checkbox" value=8>Level crossing</label>
+                                    <label><input type="checkbox" value=9>Other intersection</label>
+                                </div>
+                            </div>
+
+                            <label for="collisionType">Collision type:</label>
+
+                            <div class="dropdown">
+                                <div onclick="toggleDropdown('col')" class="dropdown-btn" data-dropdown="col">Select collision type</div>
+                                <div id="col" class="dropdown-content" onclick="event.stopPropagation()">
+                                    <label><input type="checkbox" value=1>Two vehicles - Frontal</label>
+                                    <label><input type="checkbox" value=2>Two vehicles - from the rear</label>
+                                    <label><input type="checkbox" value="3">Two vehicles - by the side</label>
+                                    <label><input type="checkbox" value="4">Three vehicles and more - in chain</label>
+                                    <label><input type="checkbox" value="5">Three vehicles or more - multiple collisions</label>
+                                    <label><input type="checkbox" value="6">Other collision</label>
+                                    <label><input type="checkbox" value="7">Without collision</label>
+                                </div>
+                            </div>
+                            
+                            <label for="lightingCondition">Lighting condition:</label>
+
+                            <div class="dropdown">
+                                <div onclick="toggleDropdown('lum')" class="dropdown-btn" data-dropdown="lum">Select lighting condition</div>
+                                <div id="lum" class="dropdown-content" onclick="event.stopPropagation()">
+                                    <label><input type="checkbox" value="1">Full day</label>
+                                    <label><input type="checkbox" value="2">Twilight or dawn</label>
+                                    <label><input type="checkbox" value="3">Night without public lighting</label>
+                                    <label><input type="checkbox" value="4">Night with public lighting not lit</label>
+                                    <label><input type="checkbox" value="5">Night with public lighting on</label>
+
+                                </div>
+                            </div>
+                            
+                            <label for="Category of road">Category of road:</label>
+                            <div class="dropdown">
+                                <div onclick="toggleDropdown('catr')" class="dropdown-btn" data-dropdown="catr">Select category of road</div>
+                                <div id="catr" class="dropdown-content" onclick="event.stopPropagation()">
+                                    <label><input type="checkbox" value="1">Highway</label>
+                                    <label><input type="checkbox" value="2">National road</label>
+                                    <label><input type="checkbox" value="3">Departmental road</label>
+                                    <label><input type="checkbox" value="4">Communal highway</label>
+                                    <label><input type="checkbox" value="5">Off public network</label>
+                                    <label><input type="checkbox" value="6">Parking lot open to public traffic</label>
+                                    <label><input type="checkbox" value="9">Other</label>
+
+                                </div>
+                            </div>
+
+                            <label for="surfaceCondition">Surface condition:</label>
+                            <div class="dropdown">
+                                <div onclick="toggleDropdown('surf')" class="dropdown-btn" data-dropdown="surf">Select surface condition</div>
+                                <div id="surf" class="dropdown-content" onclick="event.stopPropagation()">
+                                    <label><input type="checkbox" value="1">Normal</label>
+                                    <label><input type="checkbox" value="2">Wet</label>
+                                    <label><input type="checkbox" value="3">Puddles</label>
+                                    <label><input type="checkbox" value="4">Flooded</label>
+                                    <label><input type="checkbox" value="5">Snow</label>
+                                    <label><input type="checkbox" value="6">Mud</label>
+                                    <label><input type="checkbox" value="7">Icy</label>
+                                    <label><input type="checkbox" value="8">Oil</label>
+                                    <label><input type="checkbox" value="9">Other</label>
+                                </div>
+                            </div>
+
+                            
+
+                            <label for="vehicleType">Vehicle type:</label>
+
+                            <div class="dropdown">
+                                <div onclick="toggleDropdown('catv')" class="dropdown-btn" data-dropdown="catv">Select vehicle type</div>
+                                <div id="catv" class="dropdown-content" onclick="event.stopPropagation()">
+                                    <label><input type="checkbox" value="1">Bicycle</label>
+                                    <label><input type="checkbox" value="2">Moped</label>
+                                    <label><input type="checkbox" value="3">Quad</label>
+                                    <!-- <label><input type="checkbox" value="4">Scooter</label> -->
+                                    <!-- <label><input type="checkbox" value="5">Side-car</label> -->
+                                    <!-- <label><input type="checkbox" value="6">Motorcycle</label> -->
+                                    <label><input type="checkbox" value="7">VL-car (weigth &lt; 1.5 tons)</label>
+                                    <!-- <label><input type="checkbox" value="8">VL-car + caravan</label> -->
+                                    <!-- <label><input type="checkbox" value="9">VL-car + trailer</label> -->
+                                    <label><input type="checkbox" value="10">VU-car (1.5 tons &lt; weight &lt; 3.5 tons)</label>
+                                    <!-- <label><input type="checkbox" value="11">VU-car + caravan</label> -->
+                                    <!-- <label><input type="checkbox" value="12">VU-car + trailer</label> -->
+                                    <label><input type="checkbox" value="13">PL-car (weight &gt; 3.5 tons)</label>
+
+
+                                </div>
+                            </div>
+
+
+                            <label for="categoryUser">Category user:</label>
+
+                            <div class="dropdown">
+                                <div onclick="toggleDropdown('catu')" class="dropdown-btn" data-dropdown="catu">Select user category</div>
+                                <div id="catu" class="dropdown-content" onclick="event.stopPropagation()">
+                                    <label><input type="checkbox" value="1">Driver</label>
+                                    <label><input type="checkbox" value="2">Passenger</label>
+                                    <label><input type="checkbox" value="3">Pedestrian</label>
+                                    <label><input type="checkbox" value="4">Pedestrian in rollerblade or scooter</label>
+                                </div>
+                            </div>
+                        
+                            <label for="Security Measures">Security measures:</label>
+
+                            <div class="dropdown">
+                                <div onclick="toggleDropdown('secu')" class="dropdown-btn" data-dropdown="secu">Select used security mesures</div>
+                                <div id="secu" class="dropdown-content" onclick="event.stopPropagation()">
+                                    <label><input type="checkbox" value="11">Belt</label>
+                                    <label><input type="checkbox" value="21">Helmet</label>
+                                    <label><input type="checkbox" value="31">Children's device</label>
+                                    <label><input type="checkbox" value="41">Reflective equipment</label>
+                                    <label><input type="checkbox" value="12">No seatbelt in car</label>
+                                    <!-- <label><input type="checkbox" value="9">Other</label> -->
+
+
+                                </div>
+                            </div>
+                        
+                        </form>
+                        <button id="Reset" onclick="updateToFixed(0)" style="display: block; margin-left: auto; margin-right: auto;">Reset</button>
+                    </div>
                 </div>
-            </div>
-            <br><br>
 
-            <label for="intersectionType">Intersection Type:</label>
+                <div id="graphs"> 
+                    <div id="leftColumn">
+                        <div id = "stackedBox">
+                            <h3 style="text-align: center;">Condition Frequency Chart</h3>
+                            <div id = "filter"></div>
+                        </div>
+                        <h3 style="text-align: center; margin: 10px 0;">Number of casualties <span id="totalSum" style="color:blue"></span></h3>
+                        <div id = "pieBox">
+                            
+                            <div id = "pie"></div>
+                            <h3 style="text-align: center;">Severity distribution</h3>
+                        </div>
+                    </div>
 
-            <div class="dropdown">
-                <div onclick="toggleDropdown('int')" class="dropdown-btn" data-dropdown="int">Select intersection type</div>
-                <div id="int" class="dropdown-content" onclick="event.stopPropagation()">
-                    <label><input type="checkbox" value=1>Out of intersection</label>
-                    <label><input type="checkbox" value=2>Intersection in X</label>
-                    <label><input type="checkbox" value=3>Intersection in T</label>
-                    <label><input type="checkbox" value=4>Intersection in Y</label>
-                    <label><input type="checkbox" value=5>Intersection with more than 4 branches </label>
-                    <label><input type="checkbox" value=6>Giratory</label>
-                    <label><input type="checkbox" value=7>Place</label>
-                    <label><input type="checkbox" value=8>Level crossing</label>
-                    <label><input type="checkbox" value=9>Other intersection</label>
+                    <div id="rightColumn">
+                        <div id="content">
+                            <div id = "heatMapBox" class="flex-container">
+                                <div id="dropdowns">
+                                    <div class="dropdown2">
+                                        <label for="xAxisFilter">Filter for x-axis:</label>
+                                        <select id="xAxisFilter" onchange="handleSelectChange(event, 1)">
+                                            <option value="atm">Weather condition</option>
+                                            <option value="int">Intersection type</option>
+                                            <option value="col">Collision type</option>
+                                            <option value="lum">Lighting condition</option>
+                                            <option value="catr">Category of road</option>
+                                            <option value="surf">Surface condition</option>
+                                            <option value="catv">Vehicle type</option>
+                                            <option value="catu">Category user</option>
+                                            <option value="secu">Security measures</option>
+                                        </select>
+                                    </div>
+
+                                    <div class="dropdown2">
+                                        <label for="yAxisFilter">Filter for y-axis:</label>
+                                        <select id="yAxisFilter" onchange="handleSelectChange(event, 2)">
+                                            <option value="int">Intersection type</option>
+                                            <option value="atm">Weather condition</option>
+                                            <option value="col">Collision type</option>
+                                            <option value="lum">Lighting condition</option>
+                                            <option value="catr">Category of road</option>
+                                            <option value="surf">Surface condition</option>
+                                            <option value="catv">Vehicle type</option>
+                                            <option value="catu">Category user</option>
+                                            <option value="secu">Security measures</option>
+                                        </select>
+                                    </div>
+
+                                    <div class="dropdown2">
+                                        <label for="measureSelect">Select measure:</label>
+                                        <select id="measureSelect" onchange="handleSelectChange(event, 3)">
+                                            <option value="1">Fatality ratio</option>
+                                            <option value="2">Occurences</option>
+                                        </select>
+                                    </div>
+                                </div> 
+                                <div id="heatmapContainer" class="heatmap-loading-container">
+                                    <div id="heatmap"></div>
+                                    <div id="loading" class="loader"></div>
+                                </div>         
+                            </div>
+                        </div>
+
+
+                        <div id="textExplain">
+                            <span id="testText">Safety rules and improved infrastructures try to enhance road safety. 
+                                Given the inevitable occurrence and significance of traffic accidents, this dashboard unlocks new insights into patterns of accidents in France. 
+                                The data spans from 2005 to 2016 and is provided by the French government. For a comparison of individual conditions, the stacked bar chart can be used.
+                                 More insight into the correlation between conditions can be found in the heatmap. 
+                                 The pie chart will help explore the data by representing the severity ratios of your uniquely created situations. 
+                                 For some inspiration, try these interesting cases.
+                            </span>
+                            <div id="caseButtons">
+                                <button id="caseOne" onclick="updateToFixed(1)">Dangerous situation</button>
+                                <button id="caseTwo" onclick="updateToFixed(2)">Safe situation</button>
+                                <button id="caseTwo" onclick="updateToFixed(3)">Highway Stroll</button>
+                            </div>
+                        </div>
                 </div>
-            </div>
-
-            
-
-            <br><br>
-
-        
-
-            <label for="collisionType">Collision Type:</label>
-
-            <div class="dropdown">
-                <div onclick="toggleDropdown('col')" class="dropdown-btn" data-dropdown="col">Select collision type</div>
-                <div id="col" class="dropdown-content" onclick="event.stopPropagation()">
-                    <label><input type="checkbox" value=1>Two vehicles - Frontal</label>
-                    <label><input type="checkbox" value=2>Two vehicles - from the rear</label>
-                    <label><input type="checkbox" value="3">Two vehicles - by the side</label>
-                    <label><input type="checkbox" value="4">Three vehicles and more - in chain</label>
-                    <label><input type="checkbox" value="5">Three vehicles or more - multiple collisions</label>
-                    <label><input type="checkbox" value="6">Other collision</label>
-                    <label><input type="checkbox" value="7">Without collision</label>
-                </div>
-            </div>
-            
-
-            <br><br>
-
-            <label for="lightingCondition">Lighting Condition:</label>
-
-            <div class="dropdown">
-                <div onclick="toggleDropdown('lum')" class="dropdown-btn" data-dropdown="lum">Select lighting condition</div>
-                <div id="lum" class="dropdown-content" onclick="event.stopPropagation()">
-                    <label><input type="checkbox" value="1">Full day</label>
-                    <label><input type="checkbox" value="2">Twilight or dawn</label>
-                    <label><input type="checkbox" value="3">Night without public lighting</label>
-                    <label><input type="checkbox" value="4">Night with public lighting not lit</label>
-                    <label><input type="checkbox" value="5">Night with public lighting on</label>
-
-                </div>
-            </div>
-
-        
-            <br><br>
-
-            
-            
-            <label for="Category OF Road">Category Of Road:</label>
-
-            <div class="dropdown">
-                <div onclick="toggleDropdown('catr')" class="dropdown-btn" data-dropdown="catr">Select category of road</div>
-                <div id="catr" class="dropdown-content" onclick="event.stopPropagation()">
-                    <label><input type="checkbox" value="1">Highway</label>
-                    <label><input type="checkbox" value="2">National road</label>
-                    <label><input type="checkbox" value="3">Departmental road</label>
-                    <label><input type="checkbox" value="4">Communal highway</label>
-                    <label><input type="checkbox" value="5">Off public network</label>
-                    <label><input type="checkbox" value="6">Parking lot open to public traffic</label>
-                    <label><input type="checkbox" value="9">Other</label>
-
-                </div>
-            </div>
-
-            <br><br>
-
-            <label for="surfaceCondition">Surface Condition:</label>
-
-            <div class="dropdown">
-                <div onclick="toggleDropdown('surf')" class="dropdown-btn" data-dropdown="surf">Select surface condition</div>
-                <div id="surf" class="dropdown-content" onclick="event.stopPropagation()">
-                    <label><input type="checkbox" value="1">Normal</label>
-                    <label><input type="checkbox" value="2">Wet</label>
-                    <label><input type="checkbox" value="3">Puddles</label>
-                    <label><input type="checkbox" value="4">Flooded</label>
-                    <label><input type="checkbox" value="5">Snow</label>
-                    <label><input type="checkbox" value="6">Mud</label>
-                    <label><input type="checkbox" value="7">Icy</label>
-                    <label><input type="checkbox" value="8">Oil</label>
-                    <label><input type="checkbox" value="9">Other</label>
-                </div>
-            </div>
-
-            <br><br>
-
-            <label for="severityAccident">Severity of the Accident:</label>
-            <div class="dropdown">
-                <div onclick="toggleDropdown('grav')" class="dropdown-btn" data-dropdown="grav">Select severity of incedent</div>
-                <div id="grav" class="dropdown-content" onclick="event.stopPropagation()">
-                    <label><input type="checkbox" value="1">Unscathed</label>
-                    <label><input type="checkbox" value="2">Killed</label>
-                    <label><input type="checkbox" value="3">Hospitalized wounded</label>
-                    <label><input type="checkbox" value="4">Light injury</label>
-
-                </div>
-            </div>
-            <br><br>
-
-
-
-            <label for="vehicleType">Vehicle Type:</label>
-
-            <div class="dropdown">
-                <div onclick="toggleDropdown('catv')" class="dropdown-btn" data-dropdown="catv">Select vehicle type</div>
-                <div id="catv" class="dropdown-content" onclick="event.stopPropagation()">
-                    <label><input type="checkbox" value="1">Bicycle</label>
-                    <label><input type="checkbox" value="2">Moped</label>
-                    <label><input type="checkbox" value="3">Quad</label>
-                    <label><input type="checkbox" value="4">Scooter</label>
-                    <label><input type="checkbox" value="5">Side-car</label>
-                    <label><input type="checkbox" value="6">Motorcycle</label>
-                    <label><input type="checkbox" value="7">VL-car (weigth &lt; 1.5 tons)</label>
-                    <label><input type="checkbox" value="8">VL-car + caravan</label>
-                    <label><input type="checkbox" value="9">VL-car + trailer</label>
-                    <label><input type="checkbox" value="10">VU-car (1.5 tons &lt; weight &lt; 3.5 tons)</label>
-                    <label><input type="checkbox" value="11">VU-car + caravan</label>
-                    <label><input type="checkbox" value="12">VU-car + trailer</label>
-                    <label><input type="checkbox" value="13">PL-car (weight &gt; 3.5 tons)</label>
-
-
-                </div>
-            </div>
-
-            <br><br>
-
-            <label for="categoryUser">Category User:</label>
-
-            <div class="dropdown">
-                <div onclick="toggleDropdown('catu')" class="dropdown-btn" data-dropdown="catu">Select user catagory</div>
-                <div id="catu" class="dropdown-content" onclick="event.stopPropagation()">
-                    <label><input type="checkbox" value="1">Driver</label>
-                    <label><input type="checkbox" value="2">Passenger</label>
-                    <label><input type="checkbox" value="3">Pedestrian</label>
-                    <label><input type="checkbox" value="4">Pedestrian in rollerblade or scooter</label>
-                </div>
-            </div>
-        
-            <br><br>
-
-            <label for="Security Measures">Security Measures:</label>
-
-            <div class="dropdown">
-                <div onclick="toggleDropdown('secu')" class="dropdown-btn" data-dropdown="secu">Select used security measures</div>
-                <div id="secu" class="dropdown-content" onclick="event.stopPropagation()">
-                    <label><input type="checkbox" value="11">Belt</label>
-                    <label><input type="checkbox" value="21">Helmet</label>
-                    <label><input type="checkbox" value="31">Children's device</label>
-                    <label><input type="checkbox" value="41">Reflective equipment</label>
-                    <label><input type="checkbox" value="12">No seatbelt in car</label>
-                    <label><input type="checkbox" value="9">Other</label>
-
-
-                </div>
-            </div>
-        
-        
-            <input type="submit" value="Submit">
-        </form>
-
+            </div>  
+        </div>
     </div>
 
 
     <script type="module">
         import { toggleDropdown } from './uiHandler.js';
         window.toggleDropdown = toggleDropdown;
+    </script>
+
+    <script type="module">
+        import { updateToFixed } from './uiHandler.js';
+        window.updateToFixed = updateToFixed;
     </script>
 
     <script type="module" src="uiHandler.js"></script>

@@ -1,7 +1,7 @@
-import QueryGraphData from './queryGraphData.js';
-import PieChart from './pieChart.js';
-import StackGraph from './stackedGraph.js';
-import HeatMap from './heatMap.js';
+import QueryGraphData from './DataProcessing/queryGraphData.js';
+import PieChart from './Graphs/pieChart.js';
+import StackGraph from './Graphs/stackedGraph.js';
+import HeatMap from './Graphs/heatMap.js';
 
 var queryDict = {};
 var defaultStrings = {};

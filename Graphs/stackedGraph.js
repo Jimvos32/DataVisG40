@@ -12,7 +12,7 @@ export default class StackGraph {
         this.queryDict = new Object();
         this.transDict = {"1": "Unscathed", "2": "Killed", "3": "Hospitalized wounded", "4": "Light injury"};
         this.ignore = new Set();
-        this.margin = {top: 5, right: 0, bottom: 90, left: 60};
+        this.margin = {top: 5, right: 0, bottom: 90, left: 70};
         this.setupGraph();
         window.stack = this;
     }

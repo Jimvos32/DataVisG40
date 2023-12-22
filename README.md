@@ -7,4 +7,4 @@ In the data folder we have all the data files in a csv format. The DataProcess f
 The including with its logic is devided over ui.html and uiHandler.js. The images folder contains images for styling the html and should not be of any use.
 
 ## Run the code
-The only requirement for reading the code is the VS Live Server extension. Running our ui.html with the live server should make it load in you browser. The current dataset consist of accidents from the years 2015-2012. For a smoother experience one could opt to chose the smaller dataset by changing the data load statement in uiHandler.js lines 21 22
+The only requirement for reading the code is the VS Live Server extension. Running our ui.html with the live server should make it load in you browser. The current dataset consist of accidents from the years 2015-2012. For a smoother experience one could opt to chose the smaller dataset (2015-2014) by changing the data load statement in uiHandler.js lines 21 22
