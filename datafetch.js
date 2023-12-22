@@ -1,18 +1,14 @@
 
 const fs = require('fs').promises;
 
-// Function to fetch and parse CSV data
+// Function to fetch and parse CSV data and put into an object
 async function fetchAndParseCSV(filePath) {
     try {
+
       const data = await fs.readFile(filePath, 'utf-8');
-  
-      // Split the CSV into rows
       const rows = data.split('\r\n');
-  
-      // Assuming the first row contains headers
       const headers = rows[0].split(',');
   
-      // Parse the remaining rows
       const result = rows.slice(1).map(row => {
         const values = row.split(',');
         return headers.reduce((obj, header, index) => {
@@ -27,7 +23,7 @@ async function fetchAndParseCSV(filePath) {
     }
   }
 
-// Function to perform a join on two fields
+// Afunction to join the orignal tables of users and vehichles. Not included for file size reasons
 async function joinTables() {
   const users_file = 'Data/users.csv';
   const table1 = await fetchAndParseCSV(users_file);
@@ -35,9 +31,6 @@ async function joinTables() {
   const vehicles_file = 'Data/vehicles.csv';
   const table2 = await fetchAndParseCSV(vehicles_file);
 
-  console.log("users:", table1.length);
-  console.log("vehicles: ", table2.length);
-  // Create a lookup object for the second table based on the join fields
   const lookupTable2 = table2.reduce((lookup, entry) => {
 
     let key = entry['"num_veh"']; 
@@ -48,7 +41,6 @@ async function joinTables() {
     return lookup;
   }, {});
 
-  // Perform the join
   return table1.map(entry1 => {
    
     const key = entry1['"Num_Acc"'] + entry1['"num_veh"'];
@@ -58,6 +50,7 @@ async function joinTables() {
   });
 }
 
+// A function to join the characteristics and places tables. Not included for file size reasons
 async function joinTables3() {
   const characteristics_file = 'Data/caracteristics.csv';
   const table1 = await fetchAndParseCSV(characteristics_file);
@@ -65,14 +58,12 @@ async function joinTables3() {
   const places_file = 'Data/places.csv';
   const table2 = await fetchAndParseCSV(places_file);
   
-  // Create a lookup object for the second table based on the join fields
   const lookupTable2 = table2.reduce((lookup, entry) => {
     const key = entry['"Num_Acc"']; 
     lookup[key] = entry;
     return lookup;
   }, {});
 
-  // Perform the join
   return table1.map(entry1 => { 
     const key = entry1['"Num_Acc"'];
     const matchingEntry = lookupTable2[key];
@@ -80,15 +71,14 @@ async function joinTables3() {
   });
 }
 
+//Function that join the 2 joined tables into 1
 function joinAll(table1, table2) {
-  // Create a lookup object for the second table based on the join fields
   const lookupTable2 = table2.reduce((lookup, entry) => {
     const key = entry['"Num_Acc"'];  
     lookup[key] = entry;
     return lookup;
   }, {});
 
-  // Perform the join
   return table1.map(entry1 => {  
     const key = entry1['"Num_Acc"'];
     const matchingEntry = lookupTable2[key];
@@ -114,11 +104,14 @@ function objectToCsv(data) {
 // Main function
 async function main() {
     let startTime = performance.now();
+
+    //There are 3 join table functions so the original tables will not be stored in memory. Joining tables uses around 10GB of RAM
     const joinedTable = await joinTables();
     const joinedTable2 = await joinTables3();
-  
     const monsterTable = joinAll(joinedTable, joinedTable2);
 
+
+    //Filter used to ensure only data from 2015, 2014, 2013 and 2012 is used
     const a = monsterTable.filter(row => row['"an"'] == "15" || row['"an"'] == "14" || row['"an"'] == "13" || row['"an"'] == "12");
     const filteredTable = a.filter(row => row['"grav"'] == "1" || row['"grav"'] == "2" || row['"grav"'] == "3" || row['"grav"'] == "4");
 
@@ -134,17 +127,13 @@ async function main() {
     });
 
 
-    console.log(newTable.length);
     let endTime = performance.now();;
-    let elapsedTime = endTime - startTime;
-    console.log(`Elapsed Time: ${elapsedTime} milliseconds for joining ${joinedTable.length} entries`);
-
+    
     elapsedTime = endTime - startTime;
     console.log(`Elapsed Time: ${elapsedTime} milliseconds for joining ${monsterTable.length} entries`);
 
     const csvData = objectToCsv(newTable);
-    // const csvA = objectToCsv(joinedTable);
-    // const csvB = objectToCsv(joinedTable2);
+    const csvMonster = objectToCsv(monsterTable);
 
     // Write data to CSV file
     fs.writeFile('scaled_5432.csv', csvData, (err) => {
@@ -152,24 +141,11 @@ async function main() {
       console.log('The file has been saved!');
     });
 
-    // // Write data to CSV file
-    // fs.writeFile('collection_table.csv', csvData, (err) => {
-    //   if (err) throw err;
-    //   console.log('The file has been saved!');
-    // });
-
-    // // Write data to CSV file
-    // fs.writeFile('user_vehicle_table.csv', csvA, (err) => {
-    //   if (err) throw err;
-    //   console.log('The file has been saved!');
-    // });
-
-    // // Write data to CSV file
-    // fs.writeFile('char_place_table.csv', csvB, (err) => {
-    //   if (err) throw err;
-    //   console.log('The file has been saved!');
-    // });
+    // Write data to CSV file
+    fs.writeFile('collection_table.csv', csvMonster, (err) => {
+      if (err) throw err;
+      console.log('The file has been saved!');
+    });
   }
   
-  // Run the main function
   main();

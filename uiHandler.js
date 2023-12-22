@@ -1,10 +1,7 @@
 import QueryGraphData from './queryGraphData.js';
 import PieChart from './pieChart.js';
-import Graphclass from './graphClass.js';
 import StackGraph from './stackedGraph.js';
 import HeatMap from './heatMap.js';
-import { graph } from "./graph.js"
-import * as d3 from "https://cdn.jsdelivr.net/npm/d3@7/+esm";
 
 var queryDict = {};
 var defaultStrings = {};
@@ -19,19 +16,23 @@ var lastFilter = ["atm", [['Normal', 1],['Light rain', 2],['Heavy rain', 3],['Sn
     ,['Fog - smoke', 5],['Strong wind - storm', 6],['Dazzling weather', 7],['Cloudy weather', 8],['Other', 9]]];
 
 async function init() {
-    
+
+    //Here you can select which data to load
     await queryGraphData.getAllData('Data/scaled_5432.csv');
     // await queryGraphData.getAllData('Data/scaled_14_15.csv');
     // await queryGraphData.getAllData('Data/scaled_collection.csv');
+
     console.log("finished loading data");
     setClickListeners();
+
+    // load all the graphs
     pie = new PieChart(queryGraphData, "pie");
-    //gr = new Graphclass(queryGraphData, "plot");
     filterGraph = new StackGraph(queryGraphData, "filter");
     heat = new HeatMap(queryGraphData, "heatmap");
-    
 }
 
+// Here all the functionality of the condiotion dropdowns is defined programatically
+// All selected boxes get added to the queryDict which is used to call queryGraphData.js
 function setClickListeners() {
     var dropdowns = document.querySelectorAll('.dropdown-content');
     dropdowns.forEach(function(dropdown) {
@@ -52,7 +53,6 @@ function setClickListeners() {
                     } else {
                         queryDict[dropdown.id].delete(parseInt(this.value));
                     }
-
                 }
 
                 var selected = queryDict[dropdown.id];
@@ -71,13 +71,16 @@ function setClickListeners() {
                     
                     dropdownText.textContent = strings;
                 }
-                prepareQuery();
+                //When the click is registered the pie chart is updated
+                pie.updatePie([queryDict]);
             });
         });
     });
 
-
+    //This handles the dropdown menu from the heatmap
     window.handleSelectChange = function(event, d) {
+
+        //The event gives the data name of selected value which is used to retrieve all the filter names
         const selectedValue = event.target.value;
         heatMapVals[d] = selectedValue;
         const valueDivX = document.getElementById(heatMapVals[1]);
@@ -101,6 +104,7 @@ function setClickListeners() {
             idsY.push(parseInt(value));
         }
 
+        //Query is set up through all the heatMapVals names and the names of the filters
         var query = [];
         for (let i = 0; i < idsY.length; i++) { 
             for (let j = 0; j < idsX.length; j++) { 
@@ -111,21 +115,14 @@ function setClickListeners() {
             }
         }
 
+        //The heatmap is updated
         heat.updateHeater(query, namesX, namesY, heatMapVals[3]);
        
             
     }
 }
 
-function prepareQuery() {
-    //gr.updateGraph([queryDict]);
-    console.log(queryDict);
-    pie.updatePie([queryDict]);
-    
-
-    queryGraphData.queryList([{}]);
-}
-
+//This function handles the buttons with special cases and reset button
 export function updateToFixed(sCase) {
     var guideDict
     if (sCase == 1) {
@@ -142,11 +139,12 @@ export function updateToFixed(sCase) {
         guideDict = {};
     }
     queryDict = guideDict
-    
+
+
+    //This code updates the dropdowns to the selected values
     var dropdowns = document.querySelectorAll('.dropdown-content');
     dropdowns.forEach(function(dropdown) {
         var checkboxes = dropdown.querySelectorAll('input[type="checkbox"]');
-        //console.log(dropdown);
         checkboxes.forEach(function(checkbox) {
 
             if(guideDict[dropdown.id]  && guideDict[dropdown.id].has(parseInt(checkbox.value))) {
@@ -173,13 +171,13 @@ export function updateToFixed(sCase) {
         })
     })
 
-    //console.log(lastFilter);
+    //the graphs are updated accordingly
     pie.updatePie([queryDict]);
     filterGraph.updateFiltergraph(lastFilter, queryDict);
 
 }
 
-
+//This function handles the dropdown menus from the condition selector
 export function toggleDropdown(dropdownId) {
     var dropdown = document.getElementById(dropdownId);
 
@@ -192,10 +190,7 @@ export function toggleDropdown(dropdownId) {
 
     var filter = [];
     filter.push(dropdownId);
-    
-    // queryDict[dropdownId] = new Set();
     var labels = dropdown.querySelectorAll('label');
-
     var ids = []
 
     for (var i = 0; i < labels.length; i++) {
@@ -205,17 +200,15 @@ export function toggleDropdown(dropdownId) {
     }
 
     filter.push(ids);
-
     lastFilter = filter;
-    console.log(filter);
-    console.log(queryDict);
- 
+    
     if (openDropdown.style.display === "block" && filterGraph.currentFilter[0] != dropdownId) {
         filterGraph.updateFiltergraph(filter, queryDict);
     }
 
 }
 
+//This function handles the dropdown menu from the graph selector
 window.onclick = function(event) {
     var dropdowns = document.getElementsByClassName("dropdown-content");
     for (var i = 0; i < dropdowns.length; i++) {
